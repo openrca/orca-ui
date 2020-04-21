@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Home, Navbar, Graph } from './components';
 
-const content = (
-    <div>
-        Main Content1
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './assets/ui.css';
+
+const router = (
+  <div className="wrapper">
+    <Navbar />
+    <div class="main-panel">
+      <Router>
+        <Route exact path="/" component={Home} />
+        <Route path="/graph" component={Graph} />
+      </Router>
     </div>
-)
+  </div>
+);
 
-ReactDOM.render(content, document.getElementById('root'));
+ReactDOM.render(router, document.getElementById('root'));

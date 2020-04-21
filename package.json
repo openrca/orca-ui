@@ -4,12 +4,21 @@
   "private": false,
   "license": "Apache-2.0",
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "build" : "react-scripts build",
+    "start": "react-scripts start",
+    "lint": "eslint --ext .js .",
+    "fix": "eslint --ext .js --fix ."
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -23,5 +32,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
 }
