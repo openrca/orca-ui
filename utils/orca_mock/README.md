@@ -8,4 +8,16 @@ using the real OpenRCA deployment.
 
 ## Usage
 
-**TODO:** Write usage instructions
+Build Docker image:
+
+```bash
+$ docker build -t openrca/orca-mock .
+```
+
+Run Docker container:
+
+```
+$ docker run --name orca-mock -p 5000:5000 openrca/orca-mock
+```
+
+Swagger UI is available at: http://localhost:5000/v1
