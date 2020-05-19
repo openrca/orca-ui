@@ -21,4 +21,50 @@ namespace = Namespace('graph', description='Graph API')
 class Graph(Resource):
 
     def get(self):
-        return {"test": "ok!"}
+        return GRAPH_MOCK
+
+
+
+GRAPH_MOCK = {
+    "nodes": [
+        {
+            "id": "1111",
+            "origin": "kubernetes",
+            "kind": "pod",
+            "properties": {
+                "name": "hello-world-1",
+                "namespace": "default"
+            }
+        },
+        {
+            "id": "2222",
+            "origin": "kubernetes",
+            "kind": "pod",
+            "properties": {
+                "name": "hello-world-2",
+                "namespace": "default"
+            }
+        },
+        {
+            "id": "3333",
+            "origin": "kubernetes",
+            "kind": "service",
+            "properties": {
+                "name": "hello-world",
+                "namespace": "default"
+            }
+        }
+    ],
+    "links": [
+        {
+            "id": "1111",
+            "source": "3333",
+            "target": "1111"
+        },
+        {
+            "id": "2222",
+            "source": "3333",
+            "target": "2222"
+        }
+    ]
+}
