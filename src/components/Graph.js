@@ -3,7 +3,19 @@ import * as d3 from 'd3';
 import data from './flare-2.json';
 
 export class Graph extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      link: null,
+      node: null
+    }
+  }
+
   componentDidMount(){
+    this.generateGraph();
+  }
+
+  generateGraph() {
     const width = 600;
     const height = 600;
     const svg = d3.select('#chart-area')
@@ -43,19 +55,24 @@ export class Graph extends React.Component {
     node.append('title')
       .text((d) => {return d.id;});
 
-    simulation.on('tick', ticked);
+    this.setState({
+      link: link,
+      node: node
+    }, () => {
+      simulation.on('tick', this.ticked.bind(this));
+    })
+  }
 
-    function ticked() {
-      link
-        .attr('x1', function(d) { return d.source.x; })
-        .attr('y1', function(d) { return d.source.y; })
-        .attr('x2', function(d) { return d.target.x; })
-        .attr('y2', function(d) { return d.target.y; });
+  ticked() {
+    this.state.link
+      .attr('x1', function(d) { return d.source.x; })
+      .attr('y1', function(d) { return d.source.y; })
+      .attr('x2', function(d) { return d.target.x; })
+      .attr('y2', function(d) { return d.target.y; });
 
-      node
-        .attr('cx', function(d) { return d.x; })
-        .attr('cy', function(d) { return d.y; });
-    }
+    this.state.node
+      .attr('cx', function(d) { return d.x; })
+      .attr('cy', function(d) { return d.y; });
   }
 
   render(){
