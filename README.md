@@ -6,6 +6,39 @@
 
 This repository contains the source code for the OpenRCA web interface.
 
+## Usage
+
+### Build and run in Docker
+
+Build Docker image:
+
+```bash
+$ docker build -t openrca/orca-ui .
+```
+
+Run Docker container:
+
+```
+$ docker run -it --name orca-ui -p 3000:3000 openrca/orca-ui
+```
+
+### Build and run locally
+
+Install dependencies:
+```bash
+$ yarn
+```
+
+Build:
+```bash
+$ yarn build
+```
+
+Run:
+```bash
+$ yarn start
+```
+
 ## Development
 
 **TODO:** Write development instructions
