@@ -24,18 +24,17 @@ $ docker run -it --name orca-ui -p 3000:3000 openrca/orca-ui
 
 ### Build and run locally
 
-Install dependencies
-
+Install dependencies:
 ```bash
 $ yarn
 ```
 
-Build
+Build:
 ```bash
 $ yarn build
 ```
 
-Run
+Run:
 ```bash
 $ yarn start
 ```
