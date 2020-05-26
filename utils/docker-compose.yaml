@@ -1,0 +1,10 @@
+version: '3'
+services:
+  orca-ui:
+    build: ..
+    stdin_open: true
+    ports:
+      - "3000:3000"
+  orca-mock:
+    build: ./orca_mock
+    network_mode: "service:orca-ui"
