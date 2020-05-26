@@ -19,4 +19,4 @@
    service | port
    --- | ---
    orca-ui | 3000
-   orca-api-mock | 5000 _(loopback interface only)_
+   orca-api-mock | 127.0.0.1:5000 _(from orca-ui container)_
