@@ -1,21 +1,32 @@
 import React from 'react';
 import * as d3 from 'd3';
-import data from './flare-2.json';
+import axios from 'axios';
 
 export class Graph extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       link: null,
-      node: null
+      node: null,
     }
   }
 
   componentDidMount(){
-    this.generateGraph();
+    this.load_data();
   }
 
-  generateGraph() {
+  load_data() {
+    axios.get(process.env.REACT_APP_BACKEND_HOST + `/v1/graph`)
+      .then((response) => {
+        console.log(response);
+        this.generateGraph(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  generateGraph(response) {
     const width = 600;
     const height = 600;
     const svg = d3.select('#chart-area')
@@ -23,20 +34,19 @@ export class Graph extends React.Component {
       .attr('width', width)
       .attr('height', height);
 
-    const root = d3.hierarchy(data);
-    const links = root.links();
-    const nodes = root.descendants();
+    const links = response.data.links;
+    const nodes = response.data.nodes;
 
-    const simulation = d3.forceSimulation(nodes)
+    const simulation = d3.forceSimulation(d3.values(nodes))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('link', d3.forceLink(links).id(d => d.id).distance(0).strength(1))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(100).strength(1))
       .force('charge', d3.forceManyBody().strength(-50))
       .force('x', d3.forceX())
       .force('y', d3.forceY());
-
+    
     const link = svg.append('g')
       .attr('stroke', '#999')
-      .attr('stroke-opacity', 0.6)
+      .attr('stroke-opacity', 1.0)
       .selectAll('line')
       .data(links)
       .join('line');
@@ -46,11 +56,11 @@ export class Graph extends React.Component {
       .attr('stroke', '#000')
       .attr('stroke-width', 1.5)
       .selectAll('circle')
-      .data(nodes)
+      .data(simulation.nodes())
       .join('circle')
-      .attr('fill', d => d.children ? null : '#000')
-      .attr('stroke', d => d.children ? null : '#fff')
-      .attr('r', 3.5);
+      .attr('fill', d => d.kind === 'pod' ? "#3f33ff" : null)
+      .attr('fill', d => d.kind === 'service' ? "#68686f" : null)
+      .attr('r', 10);
     
     node.append('title')
       .text((d) => {return d.id;});

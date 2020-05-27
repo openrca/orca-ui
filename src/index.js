@@ -9,7 +9,7 @@ import './assets/ui.css';
 const router = (
   <div className="wrapper">
     <Navbar />
-    <div class="main-panel">
+    <div className="main-panel">
       <Router>
         <Route exact path="/" component={Home} />
         <Route path="/graph" component={Graph} />
