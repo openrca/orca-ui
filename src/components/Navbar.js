@@ -10,7 +10,7 @@ export class NavbarComponent extends React.Component {
           <img src={logo} className="Orca-logo" alt="logo" />
           OpenRCA
         </Navbar.Brand>
-        <Navbar.Toggle aria-contols="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/graph">Graph</Nav.Link>

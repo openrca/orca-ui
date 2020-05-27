@@ -7,8 +7,8 @@ export class Graph extends React.Component {
     super(props);
     this.state = {
       link: null,
-      node: null,
-    }
+      node: null
+    };
   }
 
   componentDidMount(){
@@ -16,14 +16,14 @@ export class Graph extends React.Component {
   }
 
   load_data() {
-    axios.get(process.env.REACT_APP_BACKEND_HOST + `/v1/graph`)
+    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
         console.log(response);
         this.generateGraph(response);
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   }
 
   generateGraph(response) {
@@ -43,14 +43,14 @@ export class Graph extends React.Component {
       .force('charge', d3.forceManyBody().strength(-50))
       .force('x', d3.forceX())
       .force('y', d3.forceY());
-    
+
     const link = svg.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 1.0)
       .selectAll('line')
       .data(links)
       .join('line');
-    
+
     const node = svg.append('g')
       .attr('fill', '#fff')
       .attr('stroke', '#000')
@@ -58,8 +58,8 @@ export class Graph extends React.Component {
       .selectAll('circle')
       .data(simulation.nodes())
       .join('circle')
-      .attr('fill', d => d.kind === 'pod' ? "#3f33ff" : null)
-      .attr('fill', d => d.kind === 'service' ? "#68686f" : null)
+      .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
+      .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
       .attr('r', 10);
     
     node.append('title')
@@ -70,7 +70,7 @@ export class Graph extends React.Component {
       node: node
     }, () => {
       simulation.on('tick', this.ticked.bind(this));
-    })
+    });
   }
 
   ticked() {
