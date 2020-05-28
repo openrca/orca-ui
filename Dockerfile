@@ -1,12 +1,16 @@
 FROM node:8
 
+# specify "dev" or "prod"
+ARG target=prod
+
 WORKDIR /app
 
 COPY . ./
 
 RUN yarn
 
-RUN yarn build
+RUN echo "Target is set to: $target"
+RUN test "$target" = "prod" && yarn build || true
 
 EXPOSE 3000
 
