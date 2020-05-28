@@ -9,7 +9,6 @@ COPY . ./
 
 RUN yarn
 
-RUN echo "Target is set to: $target"
 RUN test "$target" = "prod" && yarn build || true
 
 EXPOSE 3000

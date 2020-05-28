@@ -41,7 +41,19 @@ $ yarn start
 
 ## Development
 
-**TODO:** Write development instructions
+Navigate to `utils` directory.
+Build and start containers by executing command below (requres `docker-compose`):
+
+```sh
+docker-compose up
+```
+
+Orca UI is now available at [http://localhost](http://localhost).
+
+The code can be modified locally as it is bound to running container.
+It will be recompiled on the fly.
+Hot reload feature is also enabled, so any changes should be
+visible without reloading the webpage.
 
 ## Contact
 

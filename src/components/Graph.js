@@ -61,7 +61,7 @@ export class Graph extends React.Component {
       .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
       .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
       .attr('r', 10);
-    
+
     node.append('title')
       .text((d) => {return d.id;});
 

@@ -4,12 +4,20 @@ services:
     build: ./orca_proxy
     ports:
       - "80:80"
+
   orca-ui:
-    build: ..
+    build:
+      context: ..
+      args:
+        - target=dev
     stdin_open: true
-    network_mode: "service:orca-proxy"
     environment:
       - "REACT_APP_BACKEND_HOST=http://localhost/api"
+      - "PUBLIC_URL=http://localhost"
+    volumes:
+      - ../public:/app/public
+      - ../src:/app/src
+      - ../package.json:/app/package.json
+
   orca-mock:
     build: ./orca_mock
-    network_mode: "service:orca-proxy"
