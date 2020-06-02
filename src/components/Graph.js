@@ -7,7 +7,7 @@ import './Graph.css';
 
 
 export class Graph extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       link: null,
@@ -19,14 +19,15 @@ export class Graph extends React.Component {
     this.graphUpdate = this.graphUpdate.bind(this);
     this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
     this.ticked = this.ticked.bind(this);
+    this.nodeCircleRadius = 10;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.prepareSvg();
     this.loadData(this.generateGraph);
   }
 
-  onDateTimeSelect(){
+  onDateTimeSelect() {
     this.loadData(this.graphUpdate);
   }
 
@@ -40,11 +41,29 @@ export class Graph extends React.Component {
       });
   }
 
-  graphUpdate(response){
+  graphUpdate(response) {
     this.generateGraph(response);
   }
 
-  prepareSvg(){
+  clearClicked() {
+    d3.selectAll('.clicked').classed('clicked', false);
+  }
+
+  nodeMouseOver(node, nodeData) {
+    const radiusMultiplier = 1.5;
+    node.attr('r', this.nodeCircleRadius * radiusMultiplier);
+  }
+
+  nodeMouseOut(node, nodeData) {
+    node.attr('r', this.nodeCircleRadius);
+  }
+
+  nodeClick(node, nodeData) {
+    this.clearClicked();
+    node.classed('clicked', true);
+  }
+
+  prepareSvg() {
     const svg = d3.select('#chart-area')
       .append('svg')
       .style('width', '100%')
@@ -89,8 +108,6 @@ export class Graph extends React.Component {
     var links = response.data.links;
     var nodes = d3.values(response.data.nodes);
 
-    const nodeRadius = 10;
-
     const old = new Map(this.state.node.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
     links = links.map(d => Object.assign({}, d));
@@ -100,15 +117,19 @@ export class Graph extends React.Component {
       .join(enter => enter.append('circle'))
       .attr('id', d => `graph-node-${d.id}`)
       .attr('class', d => `graph-node ${d.kind}`)
-      .attr('r', nodeRadius)
+      .attr('r', this.nodeCircleRadius)
       .call(this.drag(this.state.simulation));
 
     node.append('title')
-      .text((d) => {return d.id;});
+      .text((d) => { return d.id; });
 
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line');
+    node
+      .on('mouseover', d => this.nodeMouseOver(d3.select(`#graph-node-${d.id}`), d))
+      .on('mouseout', d => this.nodeMouseOut(d3.select(`#graph-node-${d.id}`), d))
+      .on('click', d => this.nodeClick(d3.select(`#graph-node-${d.id}`), d));
 
     this.setState({
       node: node,
@@ -122,19 +143,19 @@ export class Graph extends React.Component {
 
   ticked() {
     this.state.link
-      .attr('x1', function(d) { return d.source.x; })
-      .attr('y1', function(d) { return d.source.y; })
-      .attr('x2', function(d) { return d.target.x; })
-      .attr('y2', function(d) { return d.target.y; });
+      .attr('x1', function (d) { return d.source.x; })
+      .attr('y1', function (d) { return d.source.y; })
+      .attr('x2', function (d) { return d.target.x; })
+      .attr('y2', function (d) { return d.target.y; });
 
     this.state.node
-      .attr('cx', function(d) { return d.x; })
-      .attr('cy', function(d) { return d.y; });
+      .attr('cx', function (d) { return d.x; })
+      .attr('cy', function (d) { return d.y; });
   }
 
   drag(simulation) {
     function dragstarted(d) {
-      if(!d3.event.active) simulation.alphaTarget(0.3).restart();
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
@@ -145,7 +166,7 @@ export class Graph extends React.Component {
     }
 
     function dragended(d) {
-      if(!d3.event.active) simulation.alphaTarget(0);
+      if (!d3.event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
     }
@@ -156,11 +177,11 @@ export class Graph extends React.Component {
       .on('end', dragended);
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <div id="chart-area" />
-        <DateTimePicker onSelect={this.onDateTimeSelect}/>
+        <DateTimePicker onSelect={this.onDateTimeSelect} />
       </div>
     );
   }
