@@ -13,7 +13,7 @@ services:
         - target=dev
     stdin_open: true
     environment:
-      - "REACT_APP_BACKEND_HOST=http://localhost/api"
+      - "REACT_APP_BACKEND_HOST=/api"
       - "PUBLIC_URL=http://localhost"
     volumes:
       - ../public:/app/public
