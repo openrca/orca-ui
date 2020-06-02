@@ -87,6 +87,8 @@ export class Graph extends React.Component {
     var links = response.data.links;
     var nodes = d3.values(response.data.nodes);
 
+    const nodeRadius = 10;
+
     const old = new Map(this.state.node.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
     links = links.map(d => Object.assign({}, d));
@@ -94,14 +96,14 @@ export class Graph extends React.Component {
     const node = this.state.node
       .data(nodes, d => d.id)
       .join(enter => enter.append('circle'))
-      .attr('r', 10)
-      .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
-      .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
+      .attr('id', d => `graph-node-${d.id}`)
+      .attr('class', d => `graph-node ${d.kind}`)
+      .attr('r', nodeRadius)
       .call(this.drag(this.state.simulation));
 
     node.append('title')
       .text((d) => {return d.id;});
-      
+
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line');
@@ -134,12 +136,12 @@ export class Graph extends React.Component {
       d.fx = d.x;
       d.fy = d.y;
     }
-  
+
     function dragged(d) {
       d.fx = d3.event.x;
       d.fy = d3.event.y;
     }
-  
+
     function dragended(d) {
       if(!d3.event.active) simulation.alphaTarget(0);
       d.fx = null;
