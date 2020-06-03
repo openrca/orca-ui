@@ -40,4 +40,5 @@ setup(
             'orca-api = orca_mock.cmd.api:main',
         ]
     },
+    include_package_data=True,
     zip_safe=False)

@@ -12,20 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask_restx import Namespace, Resource
-
-from orca_mock import mock_data
-
-namespace = Namespace('graph', description='Graph API')
+import json
+import pkg_resources
 
 
-@namespace.route('/')
-class Graph(Resource):
-
-    def __init__(self, _api):
-        super().__init__()
-        self._mock_data = mock_data.load_data('graph')
-
-    def get(self):
-        return self._mock_data
-
+def load_data(name):
+    filename = "%s.json" % name
+    return json.loads(pkg_resources.resource_string(__name__, filename))
