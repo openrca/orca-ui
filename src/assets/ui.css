@@ -4,7 +4,6 @@ html {
 
 .app {
     text-align: center;
-    margin-top: 10px;
 }
 
 .Orca-logo {
@@ -13,5 +12,5 @@ html {
 }
 
 #chart-area {
-    height: calc(100vh - 76px);
+    height: calc(100vh - 66px);
 }
