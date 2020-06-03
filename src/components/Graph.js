@@ -7,7 +7,8 @@ export class Graph extends React.Component {
     super(props);
     this.state = {
       link: null,
-      node: null
+      node: null,
+      simulation: null
     };
   }
 
@@ -61,7 +62,8 @@ export class Graph extends React.Component {
       .join('circle')
       .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
       .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
-      .attr('r', 10);
+      .attr('r', 10)
+      .call(this.drag(simulation));
 
     node.append('title')
       .text((d) => {return d.id;});
@@ -84,6 +86,30 @@ export class Graph extends React.Component {
     this.state.node
       .attr('cx', function(d) { return d.x; })
       .attr('cy', function(d) { return d.y; });
+  }
+
+  drag(simulation) {
+    function dragstarted(d) {
+      if(!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+  
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+  
+    function dragended(d) {
+      if(!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    return d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
   }
 
   render(){
