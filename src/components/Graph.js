@@ -7,8 +7,7 @@ export class Graph extends React.Component {
     super(props);
     this.state = {
       link: null,
-      node: null,
-      simulation: null
+      node: null
     };
   }
 
@@ -38,7 +37,7 @@ export class Graph extends React.Component {
 
     const g = svg
       .call(d3.zoom().on('zoom', () => {
-        g.attr('transform', d3.event.transform)
+        g.attr('transform', d3.event.transform);
       }))
       .append('g');
 
