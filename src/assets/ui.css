@@ -11,3 +11,7 @@ html {
     height: 2.5rem;
     margin-right: 0.5rem;
 }
+
+#chart-area {
+    height: calc(100vh - 76px);
+}

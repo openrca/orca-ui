@@ -27,12 +27,13 @@ export class Graph extends React.Component {
   }
 
   generateGraph(response) {
-    const width = 600;
-    const height = 600;
     const svg = d3.select('#chart-area')
       .append('svg')
-      .attr('width', width)
-      .attr('height', height);
+      .style('width', '100%')
+      .style('height', '100%');
+
+    const width = svg.node().getBoundingClientRect().width;
+    const height = svg.node().getBoundingClientRect().height;
 
     const links = response.data.links;
     const nodes = response.data.nodes;
@@ -88,7 +89,6 @@ export class Graph extends React.Component {
   render(){
     return(
       <div className="app">
-        <p> OpenRCA Graph</p>
         <div id="chart-area"></div>
       </div>
     );
