@@ -36,6 +36,12 @@ export class Graph extends React.Component {
     const width = svg.node().getBoundingClientRect().width;
     const height = svg.node().getBoundingClientRect().height;
 
+    const g = svg
+      .call(d3.zoom().on('zoom', () => {
+        g.attr('transform', d3.event.transform)
+      }))
+      .append('g');
+
     const links = response.data.links;
     const nodes = response.data.nodes;
 
@@ -46,14 +52,14 @@ export class Graph extends React.Component {
       .force('x', d3.forceX())
       .force('y', d3.forceY());
 
-    const link = svg.append('g')
+    const link = g.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 1.0)
       .selectAll('line')
       .data(links)
       .join('line');
 
-    const node = svg.append('g')
+    const node = g.append('g')
       .attr('fill', '#fff')
       .attr('stroke', '#000')
       .attr('stroke-width', 1.5)
