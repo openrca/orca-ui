@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import axios from 'axios';
 
 import { DateTimePicker } from './DateTimePicker';
-import './Graph.css';
+import './Graph.scss';
 
 
 export class Graph extends React.Component {
