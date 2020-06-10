@@ -2,6 +2,8 @@ import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 
+import { DateTimePicker } from './DateTimePicker';
+
 export class Graph extends React.Component {
   constructor(props){
     super(props);
@@ -12,10 +14,14 @@ export class Graph extends React.Component {
   }
 
   componentDidMount(){
-    this.load_data();
+    this.loadData();
   }
 
-  load_data() {
+  onDateTimeSelect(){
+
+  }
+
+  loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
         console.log(response);
@@ -119,8 +125,9 @@ export class Graph extends React.Component {
 
   render(){
     return(
-      <div className="app">
-        <div id="chart-area"></div>
+      <div>
+        <div id="chart-area" />
+        <DateTimePicker onSelect={this.onDateTimeSelect.bind(this)}/>
       </div>
     );
   }
