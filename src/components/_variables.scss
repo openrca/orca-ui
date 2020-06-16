@@ -9,3 +9,22 @@ $graph_node_fill_pod: #3f33ff;
 
 // Services
 $graph_node_fill_service: #68686f;
+
+$node-class-fill-map: (
+    "alert": #cc241d,
+    "cluster": #3c3836,
+    "config_map": #7c6f64,
+    "daemon_set": #d65c0d,
+    "deployment": #458588,
+    "endpoints": #076678,
+    "ingress": #f2e5bc,
+    "node": #928374,
+    "persistent_volume": #689d6a,
+    "persistent_volume_claim": #427b58,
+    "pod": #d79921,
+    "replica_set": #b57614,
+    "secret": #282828,
+    "service": #8f3f71,
+    "stateful_set": #98971a,
+    "storage_class": #b16286,
+    )

@@ -7,17 +7,14 @@ g.link {
 g.graph-node {
     fill        : $graph_node_fill_default;
     stroke      : $graph_node_stroke_default;
-    stroke-width: 1.5;
+    stroke-width: 2;
 }
 
-circle.pod {
-    fill: $graph_node_fill_pod;
+@each $node-class,
+$node-fill in $node-class-fill-map {
+    circle.#{$node-class} {
+        fill  : $node-fill;
+        stroke: darken($node-fill, 30%);
+    }
 }
 
-circle.service {
-    fill: $graph_node_fill_service;
-}
-
-circle.graph-node.clicked {
-    filter: brightness(130%);
-}
