@@ -9,27 +9,38 @@ export class Graph extends React.Component {
     super(props);
     this.state = {
       link: null,
-      node: null
+      node: null,
+      simulation: null
     };
+
+    this.generateGraph = this.generateGraph.bind(this);
+    this.graphUpdate = this.graphUpdate.bind(this);
+    this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
+    this.ticked = this.ticked.bind(this);
   }
 
   componentDidMount(){
-    this.loadData();
+    this.loadData(this.generateGraph);
   }
 
   onDateTimeSelect(){
-
+    this.loadData(this.graphUpdate)
   }
 
-  loadData() {
+  loadData(cb) {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
-        console.log(response);
-        this.generateGraph(response);
+        cb(response);
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  graphUpdate(response){
+    /* 
+      Graph Update Code
+    */
   }
 
   generateGraph(response) {
@@ -81,9 +92,10 @@ export class Graph extends React.Component {
 
     this.setState({
       link: link,
-      node: node
+      node: node,
+      simulation: simulation
     }, () => {
-      simulation.on('tick', this.ticked.bind(this));
+      simulation.on('tick', this.ticked);
     });
   }
 
@@ -127,7 +139,7 @@ export class Graph extends React.Component {
     return(
       <div>
         <div id="chart-area" />
-        <DateTimePicker onSelect={this.onDateTimeSelect.bind(this)}/>
+        <DateTimePicker onSelect={this.onDateTimeSelect}/>
       </div>
     );
   }

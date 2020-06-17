@@ -12,10 +12,6 @@ export class DateTimePicker extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this);
   }
 
-  componentDidMount(){
-    console.log(this.props);
-  }
-
   handleDateChange(date){
     this.setState({
       date: date
@@ -33,7 +29,8 @@ export class DateTimePicker extends React.Component {
             onChange={this.handleDateChange}
             dateFormat='dd/MM/yyyy hh:mm a'
             showTimeSelect
-            timeIntervals={1}
+            timeIntervals={15}
+            maxDate={new Date()}
           />
         </div>
       </div>
