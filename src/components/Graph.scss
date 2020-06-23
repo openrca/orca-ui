@@ -18,3 +18,14 @@ $node-fill in $node-class-fill-map {
     }
 }
 
+circle.graph-node.clicked {
+    filter: brightness(130%);
+}
+
+svg {
+    height  : calc(100vh);
+    position: absolute;
+    top     : 0;
+    left    : 0;
+    z-index : 0;
+}
