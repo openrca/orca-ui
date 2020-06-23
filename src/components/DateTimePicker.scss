@@ -1,0 +1,10 @@
+@import "_variables.scss";
+
+.bottom-navbar {
+    height: $navbar-bottom-height;
+}
+
+.date-picker {
+    float       : right;
+    margin-right: $margin-default;
+}
