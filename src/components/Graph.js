@@ -10,7 +10,9 @@ export class Graph extends React.Component {
     this.state = {
       link: null,
       node: null,
-      simulation: null
+      simulation: null,
+      svg: null,
+      g: null
     };
 
     this.generateGraph = this.generateGraph.bind(this);
@@ -20,11 +22,12 @@ export class Graph extends React.Component {
   }
 
   componentDidMount(){
+    this.prepareSvg();
     this.loadData(this.generateGraph);
   }
 
   onDateTimeSelect(){
-    this.loadData(this.graphUpdate)
+    this.loadData(this.graphUpdate);
   }
 
   loadData(cb) {
@@ -38,25 +41,34 @@ export class Graph extends React.Component {
   }
 
   graphUpdate(response){
-    /* 
-      Graph Update Code
-    */
+    this.state.g.selectAll('g').remove();
+    this.generateGraph(response);
   }
-
-  generateGraph(response) {
+  
+  prepareSvg(){
     const svg = d3.select('#chart-area')
       .append('svg')
       .style('width', '100%')
       .style('height', '100%');
-
-    const width = svg.node().getBoundingClientRect().width;
-    const height = svg.node().getBoundingClientRect().height;
 
     const g = svg
       .call(d3.zoom().on('zoom', () => {
         g.attr('transform', d3.event.transform);
       }))
       .append('g');
+
+    this.setState({
+      svg: svg,
+      g: g
+    });
+  }
+
+  generateGraph(response) {
+    const svg = this.state.svg;
+    const g = this.state.g;
+
+    const width = svg.node().getBoundingClientRect().width;
+    const height = svg.node().getBoundingClientRect().height;
 
     const links = response.data.links;
     const nodes = response.data.nodes;
