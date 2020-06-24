@@ -41,7 +41,6 @@ export class Graph extends React.Component {
   }
 
   graphUpdate(response){
-    this.state.g.selectAll('g').remove();
     this.generateGraph(response);
   }
   
@@ -57,57 +56,66 @@ export class Graph extends React.Component {
       }))
       .append('g');
 
-    this.setState({
-      svg: svg,
-      g: g
-    });
-  }
-
-  generateGraph(response) {
-    const svg = this.state.svg;
-    const g = this.state.g;
-
     const width = svg.node().getBoundingClientRect().width;
     const height = svg.node().getBoundingClientRect().height;
 
-    const links = response.data.links;
-    const nodes = response.data.nodes;
-
-    const simulation = d3.forceSimulation(d3.values(nodes))
+    const simulation = d3.forceSimulation()
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('link', d3.forceLink(links).id(d => d.id).distance(100).strength(1))
+      .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
       .force('charge', d3.forceManyBody().strength(-50))
       .force('x', d3.forceX())
-      .force('y', d3.forceY());
+      .force('y', d3.forceY())
+      .on('tick', this.ticked);
 
     const link = g.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 1.0)
-      .selectAll('line')
-      .data(links)
-      .join('line');
+      .selectAll('line');
 
     const node = g.append('g')
       .attr('fill', '#fff')
       .attr('stroke', '#000')
       .attr('stroke-width', 1.5)
-      .selectAll('circle')
-      .data(simulation.nodes())
-      .join('circle')
-      .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
-      .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
-      .attr('r', 10)
-      .call(this.drag(simulation));
-
-    node.append('title')
-      .text((d) => {return d.id;});
+      .selectAll('circle');
 
     this.setState({
+      svg: svg,
+      g: g,
       link: link,
       node: node,
       simulation: simulation
+    });
+  }
+
+  generateGraph(response) {
+    var links = response.data.links;
+    var nodes = d3.values(response.data.nodes);
+
+    const old = new Map(this.state.node.data().map(d => [d.id, d]));
+    nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
+    links = links.map(d => Object.assign({}, d));
+
+    const node = this.state.node
+      .data(nodes, d => d.id)
+      .join(enter => enter.append('circle'))
+      .attr('r', 10)
+      .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
+      .attr('fill', d => d.kind === 'service' ? '#68686f' : null);
+
+    node.append('title')
+      .text((d) => {return d.id;});
+      
+    const link = this.state.link
+      .data(links, d => [d.source, d.target])
+      .join('line');
+
+    this.setState({
+      node: node,
+      link: link
     }, () => {
-      simulation.on('tick', this.ticked);
+      this.state.simulation.nodes(nodes);
+      this.state.simulation.force('link').links(links);
+      this.state.simulation.alpha(1).restart();
     });
   }
 
