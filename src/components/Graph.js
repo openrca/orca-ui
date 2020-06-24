@@ -10,9 +10,7 @@ export class Graph extends React.Component {
     this.state = {
       link: null,
       node: null,
-      simulation: null,
-      svg: null,
-      g: null
+      simulation: null
     };
 
     this.generateGraph = this.generateGraph.bind(this);
@@ -43,7 +41,7 @@ export class Graph extends React.Component {
   graphUpdate(response){
     this.generateGraph(response);
   }
-  
+
   prepareSvg(){
     const svg = d3.select('#chart-area')
       .append('svg')
@@ -79,8 +77,6 @@ export class Graph extends React.Component {
       .selectAll('circle');
 
     this.setState({
-      svg: svg,
-      g: g,
       link: link,
       node: node,
       simulation: simulation
@@ -100,7 +96,8 @@ export class Graph extends React.Component {
       .join(enter => enter.append('circle'))
       .attr('r', 10)
       .attr('fill', d => d.kind === 'pod' ? '#3f33ff' : null)
-      .attr('fill', d => d.kind === 'service' ? '#68686f' : null);
+      .attr('fill', d => d.kind === 'service' ? '#68686f' : null)
+      .call(this.drag(this.state.simulation));
 
     node.append('title')
       .text((d) => {return d.id;});
