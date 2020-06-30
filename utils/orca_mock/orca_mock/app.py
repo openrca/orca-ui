@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import flask
+from flask_cors import CORS
 
 from orca_mock.api import blueprint as api_bp
 
@@ -20,6 +21,7 @@ from orca_mock.api import blueprint as api_bp
 def create_app():
     app = flask.Flask(__name__)
     app.register_blueprint(api_bp)
+    CORS(app)
     return app
 
 
