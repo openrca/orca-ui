@@ -25,3 +25,9 @@ html {
     margin-right: 150px;
     margin-top: 5px;
 }
+
+.refresh {
+    color: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+}
