@@ -6,7 +6,7 @@ import './Navbar.scss';
 export class NavbarComponent extends React.Component {
   render() {
     return (
-      <Navbar class="top-navbar d-inline-block align-top" bg="dark" variant="dark" expand="lg">
+      <Navbar bg="dark" variant="dark" expand="lg">
         <Navbar.Brand href="/">
           <img src={logo} className="navbar-logo" alt="logo" />
           OpenRCA
