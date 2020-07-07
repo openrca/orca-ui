@@ -23,9 +23,10 @@ circle.graph-node.clicked {
 }
 
 svg {
-    height  : calc(100vh);
+    // height  : calc(100vh);
+    // padding-top: 66px;
     position: absolute;
     top     : 0;
     left    : 0;
-    z-index : 0;
+    z-index : 5;
 }

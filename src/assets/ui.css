@@ -5,3 +5,7 @@ html {
 .app {
     text-align: center;
 }
+
+.hidden {
+    display:none;
+}
