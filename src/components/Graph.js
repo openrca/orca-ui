@@ -40,7 +40,7 @@ export class Graph extends React.Component {
       namespace: namespace
     }, () =>{
       this.generateGraph(this.state.data);
-    })
+    });
   }
 
   loadData() {
@@ -50,14 +50,14 @@ export class Graph extends React.Component {
         const options = namespaces.map(namespace => ({
           value: namespace,
           label: namespace
-        }))
+        }));
 
         this.setState({
           options: options,
           data: response.data
         }, () => {
           this.generateGraph(response.data);
-        })
+        });
       })
       .catch((err) => {
         console.log(err);

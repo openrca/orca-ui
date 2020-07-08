@@ -9,7 +9,7 @@ export class DateTimePicker extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      options: this.props.options,
+      options: this.props.options
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
@@ -18,7 +18,7 @@ export class DateTimePicker extends React.Component {
   componentDidUpdate(){
     this.setState({
       options: this.props.options
-    })
+    });
   }
 
   shouldComponentUpdate(nextProps){
