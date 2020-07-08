@@ -3,7 +3,6 @@ import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { gray } from 'd3';
 
 export class DateTimePicker extends React.Component {
   constructor(props){
