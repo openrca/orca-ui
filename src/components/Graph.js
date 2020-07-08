@@ -1,7 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
-import Loader from 'react-loader-spinner'
+import Loader from 'react-loader-spinner';
 
 import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
@@ -145,7 +145,7 @@ export class Graph extends React.Component {
       const div = document.getElementById('chart-area');
       div.style.visibility = 'visible';
       this.scaleGraph();
-    })
+    });
   }
 
   scaleGraph(){
