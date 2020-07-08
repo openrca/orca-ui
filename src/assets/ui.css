@@ -9,3 +9,10 @@ html {
 .hidden {
     display:none;
 }
+
+.loader {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}

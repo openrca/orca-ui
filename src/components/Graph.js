@@ -1,6 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import Loader from 'react-loader-spinner'
 
 import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
@@ -18,7 +19,8 @@ export class Graph extends React.Component {
       namespace: null,
       data: null,
       svg: null,
-      g: null
+      g: null,
+      loading: true
     };
 
     this.zoom = d3.zoom();
@@ -30,9 +32,12 @@ export class Graph extends React.Component {
     this.nodeCircleRadius = 10;
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
+    this.graphLoad = this.graphLoad.bind(this);
   }
 
   componentDidMount() {
+    const div = document.getElementById('chart-area');
+    div.style.visibility = 'hidden';
     this.prepareSvg();
     this.loadData();
   }
@@ -129,8 +134,18 @@ export class Graph extends React.Component {
       svg: svg,
       g: g
     }, () => {
-      setTimeout(this.scaleGraph, 2000);
+      setTimeout(this.graphLoad, 2000);
     });
+  }
+
+  graphLoad() {
+    this.setState({
+      loading: false
+    }, () => {
+      const div = document.getElementById('chart-area');
+      div.style.visibility = 'visible';
+      this.scaleGraph();
+    })
   }
 
   scaleGraph(){
@@ -240,6 +255,9 @@ export class Graph extends React.Component {
   render() {
     return (
       <div>
+        <span className="loader">
+          <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
+        </span>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
