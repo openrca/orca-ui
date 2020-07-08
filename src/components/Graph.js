@@ -12,37 +12,56 @@ export class Graph extends React.Component {
     this.state = {
       link: null,
       node: null,
-      simulation: null
+      simulation: null,
+      options: [],
+      namespace: null,
+      data: null
     };
 
     this.generateGraph = this.generateGraph.bind(this);
-    this.graphUpdate = this.graphUpdate.bind(this);
     this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
     this.ticked = this.ticked.bind(this);
+    this.handleNamespaceChange = this.handleNamespaceChange.bind(this);
     this.nodeCircleRadius = 10;
   }
 
   componentDidMount() {
     this.prepareSvg();
-    this.loadData(this.generateGraph);
+    this.loadData();
   }
 
   onDateTimeSelect() {
-    this.loadData(this.graphUpdate);
+    this.loadData();
   }
 
-  loadData(cb) {
+  handleNamespaceChange(e) {
+    const namespace = e ? e.value : null;
+    this.setState({
+      namespace: namespace
+    }, () =>{
+      this.generateGraph(this.state.data);
+    })
+  }
+
+  loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
-        cb(response);
+        const namespaces = [...new Set(response.data.nodes.map(node => node.properties ? node.properties.namespace : null))];
+        const options = namespaces.map(namespace => ({
+          value: namespace,
+          label: namespace
+        }))
+
+        this.setState({
+          options: options,
+          data: response.data
+        }, () => {
+          this.generateGraph(response.data);
+        })
       })
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  graphUpdate(response) {
-    this.generateGraph(response);
   }
 
   clearClicked() {
@@ -104,9 +123,16 @@ export class Graph extends React.Component {
     });
   }
 
-  generateGraph(response) {
-    var links = response.data.links;
-    var nodes = d3.values(response.data.nodes);
+  generateGraph(data) {
+    var links = data.links;
+    var nodes = d3.values(data.nodes);
+
+    if(this.state.namespace){
+      nodes = nodes.filter(node => node.properties.namespace === this.state.namespace);
+    }
+
+    const nodesName = nodes.map(node => node.id);
+    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
     const old = new Map(this.state.node.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
@@ -181,7 +207,7 @@ export class Graph extends React.Component {
     return (
       <div>
         <div id="chart-area" />
-        <DateTimePicker onSelect={this.onDateTimeSelect} />
+        <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
       </div>
     );
   }

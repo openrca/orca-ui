@@ -1,16 +1,29 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import Select from 'react-select';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { gray } from 'd3';
 
 export class DateTimePicker extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      date: new Date()
+      date: new Date(),
+      options: this.props.options,
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
+  }
+
+  componentDidUpdate(){
+    this.setState({
+      options: this.props.options
+    })
+  }
+
+  shouldComponentUpdate(nextProps){
+    return this.state.options !== nextProps.options;
   }
 
   handleDateChange(date){
@@ -28,6 +41,24 @@ export class DateTimePicker extends React.Component {
   render(){
     return(
       <div className="bottom-bar">
+        <div className="select">
+          <Select 
+            menuPlacement="top"
+            options={this.state.options}
+            placeholder="Select Namespace.."
+            onChange={(e) => this.props.handleNamespaceChange(e)}
+            theme={theme => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: theme.colors.neutral60,
+                primary50: theme.colors.neutral40,
+                primary25: theme.colors.neutral20
+              }
+            })}
+            isClearable
+          />
+        </div>
         <div className="date-picker">
           <span onClick={this.handleRefresh} className="refresh">
             <i className="fa fa-refresh fa-lg"/>
