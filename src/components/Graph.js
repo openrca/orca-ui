@@ -1,6 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import Loader from 'react-loader-spinner';
 
 import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
@@ -16,8 +17,13 @@ export class Graph extends React.Component {
       simulation: null,
       options: [],
       namespace: null,
-      data: null
+      data: null,
+      svg: null,
+      g: null,
+      loading: true
     };
+
+    this.zoom = d3.zoom();
 
     this.generateGraph = this.generateGraph.bind(this);
     this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
@@ -25,9 +31,13 @@ export class Graph extends React.Component {
     this.handleNamespaceChange = this.handleNamespaceChange.bind(this);
     this.nodeCircleRadius = 10;
     this.nodeDetailCard = React.createRef();
+    this.scaleGraph = this.scaleGraph.bind(this);
+    this.graphLoad = this.graphLoad.bind(this);
   }
 
   componentDidMount() {
+    const div = document.getElementById('chart-area');
+    div.style.visibility = 'hidden';
     this.prepareSvg();
     this.loadData();
   }
@@ -94,16 +104,12 @@ export class Graph extends React.Component {
       .style('height', '100%');
 
     const g = svg
-      .call(d3.zoom().on('zoom', () => {
+      .call(this.zoom.on('zoom', () => {
         g.attr('transform', d3.event.transform);
       }))
       .append('g');
 
-    const width = svg.node().getBoundingClientRect().width;
-    const height = svg.node().getBoundingClientRect().height;
-
     const simulation = d3.forceSimulation()
-      .force('center', d3.forceCenter(width / 2, height / 2))
       .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
       .force('charge', d3.forceManyBody().strength(-50))
       .force('x', d3.forceX())
@@ -124,8 +130,46 @@ export class Graph extends React.Component {
     this.setState({
       link: link,
       node: node,
-      simulation: simulation
+      simulation: simulation,
+      svg: svg,
+      g: g
+    }, () => {
+      setTimeout(this.graphLoad, 2000);
     });
+  }
+
+  graphLoad() {
+    this.setState({
+      loading: false
+    }, () => {
+      const div = document.getElementById('chart-area');
+      div.style.visibility = 'visible';
+      this.scaleGraph();
+    });
+  }
+
+  scaleGraph(){
+    const svg = this.state.svg;
+    const g  = this.state.g;
+
+    const width = svg.node().getBoundingClientRect().width;
+    const height = svg.node().getBoundingClientRect().height;
+
+    const graphX = g.node().getBBox().x;
+    const graphY = g.node().getBBox().y;
+    const graphWidth = g.node().getBBox().width;
+    const graphHeight = g.node().getBBox().height;
+
+    const scale = 0.95 / Math.max( graphWidth/width, graphHeight/height );
+
+    const transform = d3.zoomIdentity
+      .translate(width/2 - scale * (graphX + graphWidth/2), height/2 - scale * (graphY + graphHeight/2))
+      .scale(scale);
+
+    svg
+      .transition()
+      .duration(0)
+      .call(this.zoom.transform, transform);
   }
 
   generateGraph(data) {
@@ -211,6 +255,9 @@ export class Graph extends React.Component {
   render() {
     return (
       <div>
+        <span className="loader">
+          <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
+        </span>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
