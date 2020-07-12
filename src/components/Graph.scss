@@ -1,5 +1,12 @@
 @import "_variables.scss";
 
+svg.graph {
+    position: absolute;
+    top     : 0;
+    left    : 0;
+    z-index : 5;
+}
+
 g.link {
     stroke: $graph_link_stroke_default;
 }
@@ -22,11 +29,3 @@ circle.graph-node.clicked {
     filter: brightness(130%);
 }
 
-svg {
-    // height  : calc(100vh);
-    // padding-top: 66px;
-    position: absolute;
-    top     : 0;
-    left    : 0;
-    z-index : 5;
-}

@@ -89,6 +89,7 @@ export class Graph extends React.Component {
   prepareSvg() {
     const svg = d3.select('#chart-area')
       .append('svg')
+      .attr('class', 'graph')
       .style('width', '100%')
       .style('height', '100%');
 

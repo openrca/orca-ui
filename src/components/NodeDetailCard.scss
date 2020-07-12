@@ -27,13 +27,6 @@ button.close {
     text-align: right;
 }
 
-svg {
-    position   : absolute;
-    top        : 0;
-    left       : 0;
-    z-index    : 0;
-}
-
 pre {
     // line wrapping in json card (to avoid h-scrollbar)
     white-space: pre-wrap;
