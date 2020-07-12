@@ -150,12 +150,12 @@ export class Alerts extends React.Component {
 
     return(
       <div>
-        {this.state.loading ? 
+        {this.state.loading ?
           <span className="loader">
             <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
           </span> :
           <div className="alertTable" style={{hidden: this.state.loading}}>
-            <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} bootstrap4 striped 
+            <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} classes="table-dark" bootstrap4 striped hover
               defaultSorted={defaultSort} pagination={paginationFactory(paginationOptions)} filter={filterFactory()}/>
           </div>
         }

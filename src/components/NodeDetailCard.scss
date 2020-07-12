@@ -1,6 +1,7 @@
 @import "_variables.scss";
 
-.node-info-card {
+
+.card.node-info-card {
     width     : 23rem;
     z-index   : 1030;
     position  : relative;
@@ -8,35 +9,40 @@
     transition: visibility opacity 500ms linear;
     margin    : 2rem 0 0 2rem;
     float: left;
+    background: $background-color-secondary;
+    color: $text-color-light;
 }
 
-.node-info-card:hover {
+.card.node-info-card:hover {
     opacity: 1;
 }
 
-.card-title {
+.card .card-title {
     text-align: center;
     text-transform: capitalize;
+    color: $text-color-light;
 }
 
-.card-subtitle {
+.card .card-subtitle {
     text-align: center;
-    color: $text-color-light-semi-transparent;
+    color: $text-color-light;
 }
 
-.node-info-text {
+.card .node-info-text {
     text-align: left;
 }
 
-button.close {
+.card button.close {
     margin    : 1rem;
     text-align: right;
+    color: #d1e4ff;
 }
 
-pre {
+.card pre {
     // line wrapping in json card (to avoid h-scrollbar)
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
+    color: #d1e4ff;
 }
