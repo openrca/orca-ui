@@ -1,0 +1,36 @@
+@import "_variables.scss";
+
+.node-info-card {
+    width     : 23rem;
+    z-index   : 1030;
+    position  : relative;
+    opacity   : 0.9;
+    transition: visibility opacity 500ms linear;
+    margin    : 2rem 0 0 2rem;
+}
+
+.node-info-card:hover {
+    opacity: 1;
+}
+
+.card-title {
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.node-info-text {
+    text-align: left;
+}
+
+button.close {
+    margin    : 1rem;
+    text-align: right;
+}
+
+pre {
+    // line wrapping in json card (to avoid h-scrollbar)
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+}

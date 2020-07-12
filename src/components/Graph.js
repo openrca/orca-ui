@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import axios from 'axios';
 
 import { DateTimePicker } from './DateTimePicker';
+import { NodeDetailCard } from './NodeDetailCard';
 import './Graph.scss';
 
 
@@ -23,6 +24,7 @@ export class Graph extends React.Component {
     this.ticked = this.ticked.bind(this);
     this.handleNamespaceChange = this.handleNamespaceChange.bind(this);
     this.nodeCircleRadius = 10;
+    this.nodeDetailCard = React.createRef();
   }
 
   componentDidMount() {
@@ -68,23 +70,26 @@ export class Graph extends React.Component {
     d3.selectAll('.clicked').classed('clicked', false);
   }
 
-  nodeMouseOver(node, nodeData) {
+  nodeMouseOver(node) {
     const radiusMultiplier = 1.5;
     node.attr('r', this.nodeCircleRadius * radiusMultiplier);
   }
 
-  nodeMouseOut(node, nodeData) {
+  nodeMouseOut(node) {
     node.attr('r', this.nodeCircleRadius);
   }
 
   nodeClick(node, nodeData) {
     this.clearClicked();
     node.classed('clicked', true);
+    this.nodeDetailCard.current.updateNodeData(nodeData);
+    this.nodeDetailCard.current.show();
   }
 
   prepareSvg() {
     const svg = d3.select('#chart-area')
       .append('svg')
+      .attr('class', 'graph')
       .style('width', '100%')
       .style('height', '100%');
 
@@ -207,6 +212,7 @@ export class Graph extends React.Component {
     return (
       <div>
         <div id="chart-area" />
+        <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
       </div>
     );

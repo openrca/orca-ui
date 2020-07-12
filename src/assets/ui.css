@@ -6,35 +6,6 @@ html {
     text-align: center;
 }
 
-.Orca-logo {
-    height: 2.5rem;
-    margin-right: 0.5rem;
-}
-
-#chart-area {
-    height: calc(100vh - 116px);
-}
-
-.bottom-bar {
-    height: 50px;
-    background-color: #343a40;
-}
-
-.date-picker {
-    float: right;
-    margin-right: 150px;
-    margin-top: 5px;
-}
-
-.refresh {
-    color: #fff;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-.select {
-    float: left;
-    width: 300px;
-    margin-left: 60px;
-    margin-top: 5px;
+.hidden {
+    display:none;
 }

@@ -1,11 +1,14 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
+import { Navbar } from 'react-bootstrap';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
+import './DateTimePicker.scss';
+
 export class DateTimePicker extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       date: new Date(),
@@ -25,7 +28,7 @@ export class DateTimePicker extends React.Component {
     return this.state.options !== nextProps.options;
   }
 
-  handleDateChange(date){
+  handleDateChange(date) {
     this.setState({
       date: date
     }, () => {
@@ -33,15 +36,15 @@ export class DateTimePicker extends React.Component {
     });
   }
 
-  handleRefresh(){
+  handleRefresh() {
     this.props.onSelect();
   }
 
   render(){
     return(
-      <div className="bottom-bar">
+      <Navbar bg="dark" variant="dark" expand="lg" fixed="bottom" >
         <div className="select">
-          <Select 
+          <Select
             menuPlacement="top"
             options={this.state.options}
             placeholder="Select Namespace.."
@@ -58,9 +61,9 @@ export class DateTimePicker extends React.Component {
             isClearable
           />
         </div>
-        <div className="date-picker">
+        <div className="date-picker ml-auto">
           <span onClick={this.handleRefresh} className="refresh">
-            <i className="fa fa-refresh fa-lg"/>
+            <i className="fa fa-refresh fa-lg" />
           </span>
           <DatePicker
             selected={this.state.date}
@@ -71,7 +74,7 @@ export class DateTimePicker extends React.Component {
             maxDate={new Date()}
           />
         </div>
-      </div>
+      </Navbar>
     );
   }
 }

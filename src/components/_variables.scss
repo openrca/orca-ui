@@ -1,7 +1,13 @@
+@import "bootstrap";
+
+$navbar-top-height   : 3rem;
+$navbar-bottom-height: 3rem;
+
+$margin-default: 1rem;
 
 $graph_link_stroke_default: #999;
 
-$graph_node_fill_default: #fff;
+$graph_node_fill_default  : #fff;
 $graph_node_stroke_default: #000;
 
 // Pods
@@ -27,4 +33,4 @@ $node-class-fill-map: (
     "service": #8f3f71,
     "stateful_set": #98971a,
     "storage_class": #b16286,
-    )
+)

@@ -1,5 +1,12 @@
 @import "_variables.scss";
 
+svg.graph {
+    position: absolute;
+    top     : 0;
+    left    : 0;
+    z-index : 5;
+}
+
 g.link {
     stroke: $graph_link_stroke_default;
 }
@@ -16,5 +23,9 @@ $node-fill in $node-class-fill-map {
         fill  : $node-fill;
         stroke: darken($node-fill, 30%);
     }
+}
+
+circle.graph-node.clicked {
+    filter: brightness(130%);
 }
 
