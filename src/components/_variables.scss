@@ -1,5 +1,8 @@
 @import "bootstrap";
 
+$text-color-light                 : black;
+$text-color-light-semi-transparent: rgba(0, 0, 0, 0.75);
+
 $navbar-top-height   : 3rem;
 $navbar-bottom-height: 3rem;
 
@@ -16,8 +19,7 @@ $graph_node_fill_pod: #3f33ff;
 // Services
 $graph_node_fill_service: #68686f;
 
-$node-class-fill-map: (
-    "alert": #cc241d,
+$node-class-fill-map: ("alert": #cc241d,
     "cluster": #3c3836,
     "config_map": #7c6f64,
     "daemon_set": #d65c0d,

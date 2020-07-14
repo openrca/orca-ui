@@ -18,6 +18,11 @@
     text-transform: capitalize;
 }
 
+.card-subtitle {
+    text-align: center;
+    color: $text-color-light-semi-transparent;
+}
+
 .node-info-text {
     text-align: left;
 }
