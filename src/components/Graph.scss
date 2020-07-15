@@ -29,3 +29,10 @@ circle.graph-node.clicked {
     filter: brightness(130%);
 }
 
+.stats {
+    float: right;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    z-index: 1030;
+    position  : relative;
+}
