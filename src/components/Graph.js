@@ -257,12 +257,12 @@ export class Graph extends React.Component {
   }
 
   calculateGraphStats(nodes) {
-    const stat = {}
+    const stat = {};
     stat.all = nodes.length;
     nodes.reduce((acc, node) => {
       stat[node.kind] ? stat[node.kind] += 1 : stat[node.kind] = 1;
       return stat;
-    }, stat)
+    }, stat);
     this.setState({
       stat: stat
     });
@@ -272,7 +272,7 @@ export class Graph extends React.Component {
     this.clearClicked();
     this.nodeDetailCard.current.updateNodeData({
       kind: 'Statistics',
-      properties: this.state.stat,
+      properties: this.state.stat
     });
     this.nodeDetailCard.current.show();
   }
