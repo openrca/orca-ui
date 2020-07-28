@@ -177,11 +177,23 @@ export class Graph extends React.Component {
     var nodes = d3.values(data.nodes);
 
     if(this.state.namespace){
-      nodes = nodes.filter(node => node.properties.namespace === this.state.namespace);
+      nodes = nodes.filter(node => node.properties.namespace === this.state.namespace || node.kind === 'alert');
     }
 
     const nodesName = nodes.map(node => node.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
+
+    const alertsOtherNamespace = nodes.filter(node => node.kind === 'alert').filter(alert => {
+      var valid = false;
+      links.forEach(link => {
+        if(link.source === alert.id || link.destination === alert.id) {
+          valid = true;
+        }
+      });
+      return !valid;
+    });
+
+    nodes = nodes.filter(node => !alertsOtherNamespace.includes(node));
 
     const old = new Map(this.state.node.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
