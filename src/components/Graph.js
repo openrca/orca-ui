@@ -2,6 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import { Button } from 'react-bootstrap';
 
 import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
@@ -20,7 +21,8 @@ export class Graph extends React.Component {
       data: null,
       svg: null,
       g: null,
-      loading: true
+      loading: true,
+      stat: null
     };
 
     this.zoom = d3.zoom();
@@ -33,6 +35,7 @@ export class Graph extends React.Component {
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
+    this.handleStatButton = this.handleStatButton.bind(this);
   }
 
   componentDidMount() {
@@ -225,6 +228,7 @@ export class Graph extends React.Component {
       this.state.simulation.nodes(nodes);
       this.state.simulation.force('link').links(links);
       this.state.simulation.alpha(1).restart();
+      this.calculateGraphStats(nodes);
     });
   }
 
@@ -264,12 +268,36 @@ export class Graph extends React.Component {
       .on('end', dragended);
   }
 
+  calculateGraphStats(nodes) {
+    const stat = {};
+    stat.all = nodes.length;
+    nodes.reduce((acc, node) => {
+      stat[node.kind] ? stat[node.kind] += 1 : stat[node.kind] = 1;
+      return stat;
+    }, stat);
+    this.setState({
+      stat: stat
+    });
+  }
+
+  handleStatButton() {
+    this.clearClicked();
+    this.nodeDetailCard.current.updateNodeData({
+      kind: 'Statistics',
+      properties: this.state.stat
+    });
+    this.nodeDetailCard.current.show();
+  }
+
   render() {
     return (
       <div>
         <span className="loader">
           <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
         </span>
+        <Button className="stats" onClick={this.handleStatButton} variant="dark"> 
+          STATS
+        </Button>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
