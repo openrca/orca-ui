@@ -5,7 +5,7 @@ import { Home, Navbar, Graph } from './components';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/ui.css';
-import 'font-awesome/css/font-awesome.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const router = (
   <div className="wrapper">
