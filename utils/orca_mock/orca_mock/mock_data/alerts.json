@@ -1,0 +1,89 @@
+{
+    "alerts": [
+        {
+            "id": "123",
+            "origin": "prometheus",
+            "severity": "critical",
+            "name": "SomethingHorribleHappenedWithAPod",
+            "message": "It's bad :(",
+            "source": {
+                "origin": "kubernetes",
+                "kind": "pod",
+                "properties": {
+                    "name": "elasticsearch",
+                    "namespace": "logging"
+                }
+            },
+            "created_at": 1583238896,
+            "updated_at": 1583238896
+        },
+        {
+            "id": "234",
+            "origin": "prometheus",
+            "severity": "warning",
+            "name": "SomethingHorribleHappenedWithAPod",
+            "message": "It's bad :(",
+            "source": {
+                "origin": "kubernetes",
+                "kind": "pod",
+                "properties": {
+                    "name": "elasticsearch",
+                    "namespace": "logging"
+                }
+            },
+            "created_at": 1583238896,
+            "updated_at": 1583238896
+        },
+        {
+            "id": "345",
+            "origin": "falco",
+            "severity": "info",
+            "name": "SomethingHorribleHappenedWithAPod",
+            "message": "It's bad :(",
+            "source": {
+                "origin": "kubernetes",
+                "kind": "pod",
+                "properties": {
+                    "name": "elasticsearch",
+                    "namespace": "logging"
+                }
+            },
+            "created_at": 1583238896,
+            "updated_at": 1583238896
+        },
+        {
+            "id": "456",
+            "origin": "prometheus",
+            "severity": "critical",
+            "name": "SomethingHorribleHappenedWithAPod",
+            "message": "It's bad :(",
+            "source": {
+                "origin": "kubernetes",
+                "kind": "pod",
+                "properties": {
+                    "name": "elasticsearch",
+                    "namespace": "logging"
+                }
+            },
+            "created_at": 1583238896,
+            "updated_at": 1583238896
+        },
+        {
+            "id": "567",
+            "origin": "zabbix",
+            "severity": "critical",
+            "name": "SomethingHorribleHappenedWithAPod",
+            "message": "It's bad :(",
+            "source": {
+                "origin": "kubernetes",
+                "kind": "pod",
+                "properties": {
+                    "name": "elasticsearch",
+                    "namespace": "logging"
+                }
+            },
+            "created_at": 1583238896,
+            "updated_at": 1583238896
+        }
+    ]
+}
