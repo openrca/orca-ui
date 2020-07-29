@@ -12,19 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Blueprint
-from flask_restx import Api
+from flask_restx import Namespace, Resource
 
-from orca_mock.api.resources.v1.graph import namespace as graph_ns
-from orca_mock.api.resources.v1.alert import namespace as alert_ns
+from orca_mock import mock_data
 
-blueprint = Blueprint('api', __name__, url_prefix='/v1')
+namespace = Namespace('alerts', description='Alerts API')
 
-api = Api(
-    blueprint,
-    title='OpenRCA API',
-    version='0.1',
-)
 
-api.add_namespace(graph_ns)
-api.add_namespace(alert_ns)
+@namespace.route('/')
+class AlertList(Resource):
+
+    def __init__(self, _api):
+        super().__init__()
+        self._mock_data = mock_data.load_data('alerts')
+
+    def get(self):
+        return self._mock_data
+
