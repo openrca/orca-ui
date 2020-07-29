@@ -2,6 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Loader from 'react-loader-spinner';
+import timestampToDate from 'timestamp-to-date';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import filterFactory, { selectFilter } from 'react-bootstrap-table2-filter';
 
 import './Alerts.scss';
 
@@ -19,11 +22,10 @@ export class Alerts extends React.Component {
   }
 
   loadData() {
-    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
+    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
-        const alertList = response.data.nodes.filter(node => node.kind === 'alert');
         this.setState({
-          alerts: alertList,
+          alerts: response.data.alerts,
           loading: false
         });
       })
@@ -32,16 +34,72 @@ export class Alerts extends React.Component {
       });
   }
 
+  severityFormatter(cell) {
+    let badgeStyle = 'badge-secondary';
+    switch(cell) {
+      case 'critical':
+        badgeStyle = 'badge-danger';
+        break;
+      case 'warning':
+        badgeStyle = 'badge-warning';
+        break;
+      case 'info':
+        badgeStyle = 'badge-info';
+        break;
+      default:
+        break;
+    }
+
+    return (
+      <span className={`badge ${badgeStyle}`}> {cell} </span>
+    )
+  }
+
+  severitySortFunc(a, b, order, dataFiled) {
+    const valuesOrder = ['critical', 'warning', 'info']
+    if(order === 'asc') {
+      return valuesOrder.indexOf(b) - valuesOrder.indexOf(a);
+    } else {
+      return valuesOrder.indexOf(a) - valuesOrder.indexOf(b);
+    }
+  }
+
+  timestampFormatter(cell) {
+    const date = timestampToDate(cell * 1000, 'yyyy-MM-dd HH:mm:ss');
+    return (
+      <span> {date} </span>
+    )
+  }
+
   render() {
     const columns = [{
-      dataField: 'id',
-      text: 'ID'
+      dataField: 'severity',
+      text: 'Severity',
+      formatter: this.severityFormatter,
+      sort: true,
+      sortFunc: this.severitySortFunc,
+    }, {
+      dataField: 'updated_at',
+      text: 'Timestamp',
+      formatter: this.timestampFormatter,
+      sort: true
     }, {
       dataField: 'origin',
-      text: 'Origin'
+      text: 'Origin',
+      sort: true,
     }, {
-      dataField: 'properties.name',
-      text: 'Name'
+      dataField: 'name',
+      text: 'Name',
+      sort: true
+    }, {
+      dataField: 'message',
+      text: 'Message',
+      sort: true
+    }];
+
+    const defaultSort = [{
+      dataField: 'severity',
+      order: 'desc'
     }];
 
     return(
@@ -50,8 +108,9 @@ export class Alerts extends React.Component {
           <span className="loader">
             <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
           </span> :
-          <div class="alertTable" style={{hidden: this.state.loading}}>
-            <BootstrapTable keyField='id' data= {this.state.alerts} columns={columns}/>
+          <div className="alertTable" style={{hidden: this.state.loading}}>
+            <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} bootstrap4 striped 
+              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()}/>
           </div>
         }
       </div>
