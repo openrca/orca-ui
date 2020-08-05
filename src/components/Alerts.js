@@ -2,9 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Loader from 'react-loader-spinner';
-import timestampToDate from 'timestamp-to-date';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import filterFactory, { selectFilter } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter, selectFilter, dateFilter } from 'react-bootstrap-table2-filter';
 
 import './Alerts.scss';
 
@@ -24,8 +23,13 @@ export class Alerts extends React.Component {
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
+        const alerts = response.data.alerts.map(alert => {
+          alert.updated_at = new Date(1000 * alert.updated_at);
+          return alert;
+        });
+
         this.setState({
-          alerts: response.data.alerts,
+          alerts: alerts,
           loading: false
         });
       })
@@ -65,36 +69,78 @@ export class Alerts extends React.Component {
   }
 
   timestampFormatter(cell) {
-    const date = timestampToDate(cell * 1000, 'yyyy-MM-dd HH:mm:ss');
     return (
-      <span> {date} </span>
+      <span> {cell.toUTCString()} </span>
     )
   }
 
+  getOptions(field) {
+    const optionsUnique = [...new Set(this.state.alerts.map(alert => alert[field]))];
+    return optionsUnique.reduce((options, field) => ({...options, [field]: field}), {});
+  }
+
   render() {
+    const pageButtonRenderer = ({
+      page,
+      active,
+      disable,
+      onPageChange
+    }) => {
+      const handleClick = (e) => {
+        e.preventDefault();
+        onPageChange(page);
+      }
+      const activeStyle = {};
+      if(active) {
+        activeStyle.backgroundColor = '#6c757d';
+        activeStyle.color = 'white';
+      } else {
+        activeStyle.color = '#6c757d';
+      }
+
+      return (
+        <li className="page-item">
+          <a className="page-link" href="#" onClick={handleClick} style={activeStyle}>{page}</a>
+        </li>
+      )
+    };
+
+    const paginationOptions = {
+      pageButtonRenderer
+    };
+
     const columns = [{
       dataField: 'severity',
       text: 'Severity',
       formatter: this.severityFormatter,
       sort: true,
       sortFunc: this.severitySortFunc,
+      filter: selectFilter({
+        options: this.getOptions('severity')
+      })
     }, {
       dataField: 'updated_at',
       text: 'Timestamp',
       formatter: this.timestampFormatter,
-      sort: true
+      sort: true,
+      filter: dateFilter()
     }, {
       dataField: 'origin',
       text: 'Origin',
       sort: true,
+      filter: selectFilter({
+        options: this.getOptions('origin')
+      })
     }, {
       dataField: 'name',
       text: 'Name',
-      sort: true
+      sort: true,
+      filter: textFilter()
     }, {
       dataField: 'message',
       text: 'Message',
-      sort: true
+      sort: true,
+      filter: textFilter()
     }];
 
     const defaultSort = [{
@@ -110,7 +156,7 @@ export class Alerts extends React.Component {
           </span> :
           <div className="alertTable" style={{hidden: this.state.loading}}>
             <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} bootstrap4 striped 
-              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()}/>
+              defaultSorted={defaultSort} pagination={paginationFactory(paginationOptions)} filter={filterFactory()}/>
           </div>
         }
       </div>

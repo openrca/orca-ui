@@ -11597,11 +11597,6 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-timestamp-to-date@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/timestamp-to-date/-/timestamp-to-date-1.1.0.tgz#8e90ebb0c3a97f9182759f6c9657551c67788ead"
-  integrity sha1-jpDrsMOpf5GCdZ9slldVHGd4jq0=
-
 timsort@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
