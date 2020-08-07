@@ -1,0 +1,11 @@
+@import "_variables.scss";
+
+.alertTable {
+    width: 1400px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
+.react-bootstrap-table table { 
+    table-layout: auto !important; 
+}
