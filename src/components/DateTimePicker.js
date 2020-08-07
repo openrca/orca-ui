@@ -63,7 +63,7 @@ export class DateTimePicker extends React.Component {
         </div>
         <div className="date-picker ml-auto">
           <span onClick={this.handleRefresh} className="refresh">
-            <i className="fa fa-refresh fa-lg" />
+            <i className="fas fa-sync-alt fa-lg" />
           </span>
           <DatePicker
             selected={this.state.date}
