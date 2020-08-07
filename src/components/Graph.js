@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 
 import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
+import { IconMap } from './IconMap';
 import './Graph.scss';
 
 
@@ -14,7 +15,9 @@ export class Graph extends React.Component {
     super(props);
     this.state = {
       link: null,
-      node: null,
+      nodeCircle: null,
+      nodeIcon: null,
+      nodeGroup: null,
       simulation: null,
       options: [],
       namespace: null,
@@ -31,7 +34,8 @@ export class Graph extends React.Component {
     this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
     this.ticked = this.ticked.bind(this);
     this.handleNamespaceChange = this.handleNamespaceChange.bind(this);
-    this.nodeCircleRadius = 10;
+    this.nodeCircleRadius = 16;
+    this.nodeIconFontSize = 16;
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
@@ -53,7 +57,7 @@ export class Graph extends React.Component {
     const namespace = e ? e.value : null;
     this.setState({
       namespace: namespace
-    }, () =>{
+    }, () => {
       this.generateGraph(this.state.data);
     });
   }
@@ -61,7 +65,7 @@ export class Graph extends React.Component {
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
-        const namespaces = [...new Set(response.data.nodes.map(node => node.properties ? node.properties.namespace : null))];
+        const namespaces = [...new Set(response.data.nodes.map(nodeGroup => nodeGroup.properties ? nodeGroup.properties.namespace : null))];
         const options = namespaces.map(namespace => ({
           value: namespace,
           label: namespace
@@ -83,18 +87,20 @@ export class Graph extends React.Component {
     d3.selectAll('.clicked').classed('clicked', false);
   }
 
-  nodeMouseOver(node) {
-    const radiusMultiplier = 1.5;
-    node.attr('r', this.nodeCircleRadius * radiusMultiplier);
+  nodeMouseOver(nodeGroup) {
+    const multiplier = 1.5;
+    nodeGroup.select('circle').attr('r', this.nodeCircleRadius * multiplier);
+    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
   }
 
-  nodeMouseOut(node) {
-    node.attr('r', this.nodeCircleRadius);
+  nodeMouseOut(nodeGroup) {
+    nodeGroup.select('circle').attr('r', this.nodeCircleRadius);
+    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize}px`);
   }
 
-  nodeClick(node, nodeData) {
+  nodeClick(nodeGroup, nodeData) {
     this.clearClicked();
-    node.classed('clicked', true);
+    nodeGroup.classed('clicked', true);
     this.nodeDetailCard.current.updateNodeData(nodeData);
     this.nodeDetailCard.current.show();
   }
@@ -120,19 +126,22 @@ export class Graph extends React.Component {
       .on('tick', this.ticked);
 
     const link = g.append('g')
-      .attr('stroke', '#999')
-      .attr('stroke-opacity', 1.0)
       .selectAll('line');
 
-    const node = g.append('g')
-      .attr('fill', '#fff')
-      .attr('stroke', '#000')
-      .attr('stroke-width', 1.5)
+    const nodeGroup = g.append('g')
+      .selectAll('.node-group');
+
+    const nodeCircle = g.append('g')
       .selectAll('circle');
+
+    const nodeIcon = g.append('g')
+      .selectAll('text');
 
     this.setState({
       link: link,
-      node: node,
+      nodeGroup: nodeGroup,
+      nodeCircle: nodeCircle,
+      nodeIcon: nodeIcon,
       simulation: simulation,
       svg: svg,
       g: g
@@ -151,9 +160,9 @@ export class Graph extends React.Component {
     });
   }
 
-  scaleGraph(){
+  scaleGraph() {
     const svg = this.state.svg;
-    const g  = this.state.g;
+    const g = this.state.g;
 
     const width = svg.node().getBoundingClientRect().width;
     const height = svg.node().getBoundingClientRect().height;
@@ -163,10 +172,10 @@ export class Graph extends React.Component {
     const graphWidth = g.node().getBBox().width;
     const graphHeight = g.node().getBBox().height;
 
-    const scale = 0.95 / Math.max( graphWidth/width, graphHeight/height );
+    const scale = 0.95 / Math.max(graphWidth / width, graphHeight / height);
 
     const transform = d3.zoomIdentity
-      .translate(width/2 - scale * (graphX + graphWidth/2), height/2 - scale * (graphY + graphHeight/2))
+      .translate(width / 2 - scale * (graphX + graphWidth / 2), height / 2 - scale * (graphY + graphHeight / 2))
       .scale(scale);
 
     svg
@@ -179,50 +188,65 @@ export class Graph extends React.Component {
     var links = data.links;
     var nodes = d3.values(data.nodes);
 
-    if(this.state.namespace){
-      nodes = nodes.filter(node => node.properties.namespace === this.state.namespace || node.kind === 'alert');
+    if (this.state.namespace) {
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert');
     }
 
-    const nodesName = nodes.map(node => node.id);
+    const nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
-    const alertsOtherNamespace = nodes.filter(node => node.kind === 'alert').filter(alert => {
+    const alertsOtherNamespace = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
       links.forEach(link => {
-        if(link.source === alert.id || link.destination === alert.id) {
+        if (link.source === alert.id || link.destination === alert.id) {
           valid = true;
         }
       });
       return !valid;
     });
 
-    nodes = nodes.filter(node => !alertsOtherNamespace.includes(node));
+    nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
 
-    const old = new Map(this.state.node.data().map(d => [d.id, d]));
+    const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
     links = links.map(d => Object.assign({}, d));
 
-    const node = this.state.node
+    const nodeGroup = this.state.nodeGroup
       .data(nodes, d => d.id)
-      .join(enter => enter.append('circle'))
-      .attr('id', d => `graph-node-${d.id}`)
-      .attr('class', d => `graph-node ${d.kind}`)
-      .attr('r', this.nodeCircleRadius)
+      .join(enter => enter.append('g')
+        .attr('class', 'node-group')
+        .attr('id', d => `node-group-${d.id}`))
       .call(this.drag(this.state.simulation));
 
-    node.append('title')
+    const nodeCircle = nodeGroup.append('circle')
+      .attr('id', d => `graph-node-${d.id}`)
+      .attr('class', d => `graph-node ${d.kind}`)
+      .attr('r', this.nodeCircleRadius);
+
+    nodeCircle.append('title')
       .text((d) => { return d.id; });
+
+    const nodeIcon = nodeGroup.append('text')
+      .attr('class', d => `fas node-icon ${d.kind}`)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', `${this.nodeIconFontSize}px`)
+      .text((d) => IconMap[d.kind]);
 
     const link = this.state.link
       .data(links, d => [d.source, d.target])
-      .join('line');
-    node
-      .on('mouseover', d => this.nodeMouseOver(d3.select(`#graph-node-${d.id}`), d))
-      .on('mouseout', d => this.nodeMouseOut(d3.select(`#graph-node-${d.id}`), d))
-      .on('click', d => this.nodeClick(d3.select(`#graph-node-${d.id}`), d));
+      .join('line')
+      .attr('class', 'link');
+
+    nodeGroup
+      .on('mouseover', d => this.nodeMouseOver(d3.select(`#node-group-${d.id}`), d))
+      .on('mouseout', d => this.nodeMouseOut(d3.select(`#node-group-${d.id}`), d))
+      .on('click', d => this.nodeClick(d3.select(`#node-group-${d.id}`), d));
 
     this.setState({
-      node: node,
+      nodeCircle: nodeCircle,
+      nodeIcon: nodeIcon,
+      nodeGroup: nodeGroup,
       link: link
     }, () => {
       this.state.simulation.nodes(nodes);
@@ -239,9 +263,8 @@ export class Graph extends React.Component {
       .attr('x2', function (d) { return d.target.x; })
       .attr('y2', function (d) { return d.target.y; });
 
-    this.state.node
-      .attr('cx', function (d) { return d.x; })
-      .attr('cy', function (d) { return d.y; });
+    this.state.nodeGroup
+      .attr('transform', d => `translate(${d.x}, ${d.y})`);
   }
 
   drag(simulation) {
@@ -271,8 +294,8 @@ export class Graph extends React.Component {
   calculateGraphStats(nodes) {
     const stat = {};
     stat.all = nodes.length;
-    nodes.reduce((acc, node) => {
-      stat[node.kind] ? stat[node.kind] += 1 : stat[node.kind] = 1;
+    nodes.reduce((acc, nodeGroup) => {
+      stat[nodeGroup.kind] ? stat[nodeGroup.kind] += 1 : stat[nodeGroup.kind] = 1;
       return stat;
     }, stat);
     this.setState({
@@ -293,14 +316,14 @@ export class Graph extends React.Component {
     return (
       <div>
         <span className="loader">
-          <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
+          <Loader type="TailSpin" visible={this.state.loading} color='#343a40' />
         </span>
-        <Button className="stats" onClick={this.handleStatButton} variant="dark"> 
+        <Button className="stats" onClick={this.handleStatButton} variant="dark">
           STATS
         </Button>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
-        <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange}/>
+        <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange} />
       </div>
     );
   }

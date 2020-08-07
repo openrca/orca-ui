@@ -5,7 +5,7 @@ import { Home, Navbar, Graph, Alerts } from './components';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/ui.css';
-import 'font-awesome/css/font-awesome.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
