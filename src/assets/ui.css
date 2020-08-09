@@ -2,6 +2,10 @@ html {
     color: #fff;
 }
 
+body {
+    background: #15181a;
+}
+
 .app {
     text-align: center;
 }
