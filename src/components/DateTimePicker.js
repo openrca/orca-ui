@@ -43,35 +43,30 @@ export class DateTimePicker extends React.Component {
   render(){
     return(
       <Navbar bg="dark" variant="dark" expand="lg" fixed="bottom" >
-        <div className="select">
-          <Select
-            menuPlacement="top"
-            options={this.state.options}
-            placeholder="Select Namespace.."
-            onChange={(e) => this.props.handleNamespaceChange(e)}
-            theme={theme => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: theme.colors.neutral60,
-                primary50: theme.colors.neutral40,
-                primary25: theme.colors.neutral20
-              }
-            })}
-            isClearable
-          />
-        </div>
-        <div className="date-picker ml-auto">
+        <div className="date-picker-container">
           <span onClick={this.handleRefresh} className="refresh">
-            <i className="fas fa-sync-alt fa-lg" />
+            <i className="fas fa-sync-alt fa-lg refresh-icon" />
           </span>
           <DatePicker
+            className="date-picker"
             selected={this.state.date}
             onChange={this.handleDateChange}
             dateFormat='dd/MM/yyyy hh:mm a'
             showTimeSelect
             timeIntervals={15}
             maxDate={new Date()}
+          />
+        </div>
+        <div className="namespace-selector-container">
+          <Select
+            id='namespace-selector'
+            className='react-select-container'
+            classNamePrefix="react-select"
+            menuPlacement="top"
+            options={this.state.options}
+            placeholder="Select Namespace.."
+            onChange={(e) => this.props.handleNamespaceChange(e)}
+            isClearable
           />
         </div>
       </Navbar>
