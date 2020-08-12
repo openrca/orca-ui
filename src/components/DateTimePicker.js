@@ -12,7 +12,8 @@ export class DateTimePicker extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      options: this.props.options
+      namespaceOptions: this.props.namespaceOptions,
+      objectKindOptions: this.props.objectKindOptions
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
@@ -20,12 +21,13 @@ export class DateTimePicker extends React.Component {
 
   componentDidUpdate(){
     this.setState({
-      options: this.props.options
+      namespaceOptions: this.props.namespaceOptions,
+      objectKindOptions: this.props.objectKindOptions
     });
   }
 
   shouldComponentUpdate(nextProps){
-    return this.state.options !== nextProps.options;
+    return this.state.namespaceOptions !== nextProps.namespaceOptions || this.state.objectKindOptions !== nextProps.objectKindOptions;
   }
 
   handleDateChange(date) {
@@ -57,15 +59,35 @@ export class DateTimePicker extends React.Component {
             maxDate={new Date()}
           />
         </div>
-        <div className="namespace-selector-container">
+        <div className="selector-container">
           <Select
-            id='namespace-selector'
             className='react-select-container'
             classNamePrefix="react-select"
             menuPlacement="top"
-            options={this.state.options}
+            options={this.state.namespaceOptions}
             placeholder="Select Namespace.."
             onChange={(e) => this.props.handleNamespaceChange(e)}
+            isClearable
+          />
+        </div>
+        <div className="selector-container">
+          <Select
+            className='react-select-container'
+            classNamePrefix="react-select"
+            menuPlacement="top"
+            options={this.state.objectKindOptions}
+            placeholder="Select Objects.."
+            onChange={(e) => this.props.handleKindChange(e)}
+            isMulti
+            theme={theme => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: theme.colors.neutral60,
+                primary50: theme.colors.neutral40,
+                primary25: theme.colors.neutral20
+              }
+            })}
             isClearable
           />
         </div>

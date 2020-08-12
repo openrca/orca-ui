@@ -12,7 +12,7 @@ $navbar-element-height: 38px;
     height: $navbar-element-height;
 }
 
-.namespace-selector-container {
+.selector-container {
     @extend .navbar-element;
 }
 
