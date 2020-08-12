@@ -188,9 +188,7 @@ export class Graph extends React.Component {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
       links.forEach(link => {
-        if (link.source === alert.id || link.target === alert.id) {
-          valid = true;
-        }
+        link.source === alert.id || link.target === alert.id ? valid = true : null;
       });
       return !valid;
     });
@@ -199,12 +197,11 @@ export class Graph extends React.Component {
   filterK8sNodesOtherNamespace(nodes, links) {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'node').filter(node => {
       var valid = false;
-      const clusters = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster');
-      const clusterNames = clusters.map(cluster => cluster.id); 
-      const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target))) 
+      const clusterNames = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster').map(cluster => cluster.id); 
+      const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target)));
 
       linksWithoutClusters.forEach(link => {
-        if(link.source === node.id || link.target === node.id) valid = true;
+        link.source === node.id || link.target === node.id ?  valid = true : null;
       });
       return !valid;
     });
@@ -215,8 +212,8 @@ export class Graph extends React.Component {
     var nodes = d3.values(data.nodes);
 
     if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' 
-        || nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' || 
+        nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
     }
 
     const nodesName = nodes.map(nodeGroup => nodeGroup.id);
