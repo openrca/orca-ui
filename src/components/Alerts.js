@@ -13,7 +13,7 @@ export class Alerts extends React.Component {
     this.state = {
       alerts: [],
       loading: true
-    }
+    };
   }
 
   componentDidMount() {
@@ -41,26 +41,26 @@ export class Alerts extends React.Component {
   severityFormatter(cell) {
     let badgeStyle = 'badge-secondary';
     switch(cell) {
-      case 'critical':
-        badgeStyle = 'badge-danger';
-        break;
-      case 'warning':
-        badgeStyle = 'badge-warning';
-        break;
-      case 'info':
-        badgeStyle = 'badge-info';
-        break;
-      default:
-        break;
+    case 'critical':
+      badgeStyle = 'badge-danger';
+      break;
+    case 'warning':
+      badgeStyle = 'badge-warning';
+      break;
+    case 'info':
+      badgeStyle = 'badge-info';
+      break;
+    default:
+      break;
     }
 
     return (
       <span className={`badge ${badgeStyle}`}> {cell} </span>
-    )
+    );
   }
 
   severitySortFunc(a, b, order, dataFiled) {
-    const valuesOrder = ['critical', 'warning', 'info']
+    const valuesOrder = ['critical', 'warning', 'info'];
     if(order === 'asc') {
       return valuesOrder.indexOf(b) - valuesOrder.indexOf(a);
     } else {
@@ -71,7 +71,7 @@ export class Alerts extends React.Component {
   timestampFormatter(cell) {
     return (
       <span> {cell.toUTCString()} </span>
-    )
+    );
   }
 
   getOptions(field) {
@@ -89,7 +89,7 @@ export class Alerts extends React.Component {
       const handleClick = (e) => {
         e.preventDefault();
         onPageChange(page);
-      }
+      };
       const activeStyle = {};
       if(active) {
         activeStyle.backgroundColor = '#6c757d';
@@ -102,7 +102,7 @@ export class Alerts extends React.Component {
         <li className="page-item">
           <a className="page-link" href="#" onClick={handleClick} style={activeStyle}>{page}</a>
         </li>
-      )
+      );
     };
 
     const paginationOptions = {
@@ -150,16 +150,16 @@ export class Alerts extends React.Component {
 
     return(
       <div>
-        {this.state.loading ?
-          <span className="loader">
+        {this.state.loading
+          ? <span className="loader">
             <Loader type="TailSpin" visible={this.state.loading} color='#343a40'/>
-          </span> :
-          <div className="alertTable" style={{hidden: this.state.loading}}>
+          </span>
+          : <div className="alertTable" style={{hidden: this.state.loading}}>
             <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} classes="table-dark" bootstrap4 striped hover
               defaultSorted={defaultSort} pagination={paginationFactory(paginationOptions)} filter={filterFactory()}/>
           </div>
         }
       </div>
-    )
+    );
   }
 }
