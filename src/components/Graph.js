@@ -184,32 +184,57 @@ export class Graph extends React.Component {
       .call(this.zoom.transform, transform);
   }
 
-  generateGraph(data) {
-    var links = data.links;
-    var nodes = d3.values(data.nodes);
-
-    if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert');
-    }
-
-    const nodesName = nodes.map(nodeGroup => nodeGroup.id);
-    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
-
-    const alertsOtherNamespace = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
+  filterAlertOtherNamespace(nodes, links) {
+    return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
       links.forEach(link => {
-        if (link.source === alert.id || link.destination === alert.id) {
+        if (link.source === alert.id || link.target === alert.id) {
           valid = true;
         }
       });
       return !valid;
     });
+  }
+
+  filterK8sNodesOtherNamespace(nodes, links) {
+    return nodes.filter(nodeGroup => nodeGroup.kind === 'node').filter(node => {
+      var valid = false;
+      const clusters = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster');
+      const clusterNames = clusters.map(cluster => cluster.id); 
+      const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target))) 
+
+      linksWithoutClusters.forEach(link => {
+        if(link.source === node.id || link.target === node.id) valid = true;
+      });
+      return !valid;
+    });
+  }
+
+  generateGraph(data) {
+    var links = data.links;
+    var nodes = d3.values(data.nodes);
+
+    if (this.state.namespace) {
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' 
+        || nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
+    }
+
+    const nodesName = nodes.map(nodeGroup => nodeGroup.id);
+    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
+
+    const alertsOtherNamespace = this.filterAlertOtherNamespace(nodes, links);
+    const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
+    const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
+    const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
 
     nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
+    nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
+    links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
 
     const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
     links = links.map(d => Object.assign({}, d));
+    console.log(links);
 
     const nodeGroup = this.state.nodeGroup
       .data(nodes, d => d.id)
