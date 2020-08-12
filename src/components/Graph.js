@@ -219,19 +219,22 @@ export class Graph extends React.Component {
     const nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
+    
     const alertsOtherNamespace = this.filterAlertOtherNamespace(nodes, links);
-    const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
-    const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
-    const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
-
     nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
-    nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
-    links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
+    
+    if(this.state.namespace !== '{}'){
+      const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
+      const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
+      const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
+    
+      nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
+      links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
+    }
 
     const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
     links = links.map(d => Object.assign({}, d));
-    console.log(links);
 
     const nodeGroup = this.state.nodeGroup
       .data(nodes, d => d.id)
