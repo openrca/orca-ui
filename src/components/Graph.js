@@ -188,7 +188,7 @@ export class Graph extends React.Component {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
       links.forEach(link => {
-        link.source === alert.id || link.target === alert.id ? valid = true : null;
+        if(link.source === alert.id || link.target === alert.id) valid = true;
       });
       return !valid;
     });
@@ -201,7 +201,7 @@ export class Graph extends React.Component {
       const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target)));
 
       linksWithoutClusters.forEach(link => {
-        link.source === node.id || link.target === node.id ?  valid = true : null;
+        if(link.source === node.id || link.target === node.id) valid = true;
       });
       return !valid;
     });
