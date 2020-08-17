@@ -1,9 +1,18 @@
 @import "bootstrap";
 
-$background-color-primary: #15181a;
+$background-color-primary  : #15181a;
 $background-color-secondary: #252a2d;
 
-$text-color-light: #d1e4ff;
+$foreground-color-primary  : #d1e4ff;
+$foreground-color-secondary: #919191;
+
+$accent-color-red       : #d4252c;
+$accent-color-orange    : #f4830c;
+$accent-color-yellow    : #ffa500;
+$accent-color-blue      : #40879d;
+$accent-color-brightblue: #98ddf0;
+
+$text-color-light: $foreground-color-primary;
 
 $navbar-top-height   : 3rem;
 $navbar-bottom-height: 3rem;

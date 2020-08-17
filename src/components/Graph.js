@@ -318,7 +318,7 @@ export class Graph extends React.Component {
         <span className="loader">
           <Loader type="TailSpin" visible={this.state.loading} color='#343a40' />
         </span>
-        <Button className="stats" onClick={this.handleStatButton} variant="dark">
+        <Button className="stats" onClick={this.handleStatButton} variant="outline-warning" size="lg">
           STATS
         </Button>
         <div id="chart-area" />
