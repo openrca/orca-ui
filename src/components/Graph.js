@@ -67,7 +67,7 @@ export class Graph extends React.Component {
 
   handleKindChange(selectList) {
     console.log(selectList);
-    const kindList = selectList && selectList.length > 0 ? selectList.map(e => e.value) : null; 
+    const kindList = selectList && selectList.length > 0 ? selectList.map(e => e.value) : null;
     this.setState({
       kinds: kindList
     }, () => {
@@ -342,13 +342,13 @@ export class Graph extends React.Component {
         <span className="loader">
           <Loader type="TailSpin" visible={this.state.loading} color='#343a40' />
         </span>
-        <Button className="stats" onClick={this.handleStatButton} variant="outline-warning" size="lg">
-          STATS
+        <Button className="stats" onClick={this.handleStatButton} variant="outline-dark" size="xs">
+          Stats
         </Button>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
-        <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions} 
-          objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange} 
+        <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
+          objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
           handleKindChange={this.handleKindChange} />
       </div>
     );
