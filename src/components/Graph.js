@@ -231,22 +231,20 @@ export class Graph extends React.Component {
     var links = data.links;
     var nodes = d3.values(data.nodes);
 
+    //Filter by namespace
     if (this.state.namespace) {
       nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' || 
         nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
     }
 
-    if(this.state.kinds) {
-      nodes = nodes.filter(nodeGroup => this.state.kinds.includes(nodeGroup.kind));
-    }
-
-    const nodesName = nodes.map(nodeGroup => nodeGroup.id);
+    var nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
-    
+    //Filter alerts
     const alertsOtherNamespace = this.filterAlertOtherNamespace(nodes, links);
     nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
     
+    //Filter nodes
     if(this.state.namespace !== '{}'){
       const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
       const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
@@ -255,6 +253,14 @@ export class Graph extends React.Component {
       nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
       links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
     }
+
+    //Filter by type
+    if(this.state.kinds) {
+      nodes = nodes.filter(nodeGroup => this.state.kinds.includes(nodeGroup.kind));
+    }
+
+    nodesName = nodes.map(nodeGroup => nodeGroup.id);
+    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
     const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
