@@ -12,7 +12,8 @@ export class DateTimePicker extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      options: this.props.options
+      namespaceOptions: this.props.namespaceOptions,
+      objectKindOptions: this.props.objectKindOptions
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
@@ -20,12 +21,13 @@ export class DateTimePicker extends React.Component {
 
   componentDidUpdate(){
     this.setState({
-      options: this.props.options
+      namespaceOptions: this.props.namespaceOptions,
+      objectKindOptions: this.props.objectKindOptions
     });
   }
 
   shouldComponentUpdate(nextProps){
-    return this.state.options !== nextProps.options;
+    return this.state.namespaceOptions !== nextProps.namespaceOptions || this.state.objectKindOptions !== nextProps.objectKindOptions;
   }
 
   handleDateChange(date) {
@@ -43,12 +45,40 @@ export class DateTimePicker extends React.Component {
   render(){
     return(
       <Navbar bg="dark" variant="dark" expand="lg" fixed="bottom" >
-        <div className="select">
+        <div className="date-picker-container">
+          <span onClick={this.handleRefresh} className="refresh">
+            <i className="fas fa-sync-alt fa-lg refresh-icon" />
+          </span>
+          <DatePicker
+            className="date-picker"
+            selected={this.state.date}
+            onChange={this.handleDateChange}
+            dateFormat='dd/MM/yyyy hh:mm a'
+            showTimeSelect
+            timeIntervals={15}
+            maxDate={new Date()}
+          />
+        </div>
+        <div className="selector-container">
           <Select
+            className='react-select-container'
+            classNamePrefix="react-select"
             menuPlacement="top"
-            options={this.state.options}
+            options={this.state.namespaceOptions}
             placeholder="Select Namespace.."
             onChange={(e) => this.props.handleNamespaceChange(e)}
+            isClearable
+          />
+        </div>
+        <div className="selector-container">
+          <Select
+            className='react-select-container'
+            classNamePrefix="react-select"
+            menuPlacement="top"
+            options={this.state.objectKindOptions}
+            placeholder="Select Objects.."
+            onChange={(e) => this.props.handleKindChange(e)}
+            isMulti
             theme={theme => ({
               ...theme,
               colors: {
@@ -59,19 +89,6 @@ export class DateTimePicker extends React.Component {
               }
             })}
             isClearable
-          />
-        </div>
-        <div className="date-picker ml-auto">
-          <span onClick={this.handleRefresh} className="refresh">
-            <i className="fas fa-sync-alt fa-lg" />
-          </span>
-          <DatePicker
-            selected={this.state.date}
-            onChange={this.handleDateChange}
-            dateFormat='dd/MM/yyyy hh:mm a'
-            showTimeSelect
-            timeIntervals={15}
-            maxDate={new Date()}
           />
         </div>
       </Navbar>

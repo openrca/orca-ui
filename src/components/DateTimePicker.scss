@@ -4,20 +4,102 @@
     height: $navbar-bottom-height;
 }
 
-.date-picker {
-    float       : right;
-    margin-right: $margin-default;
+$navbar-element-height: 38px;
+
+.navbar-element {
+    display: inline-block;
+    margin-right: 1rem;
+    height: $navbar-element-height;
+}
+
+.selector-container {
+    @extend .navbar-element;
+}
+
+.react-select__control {
+    width: 15rem;
+    background-color: $foreground-color-secondary !important;
+    border: 1px solid $foreground-color-secondary !important;
+    border-radius: 0 !important;
+}
+
+.react-select__control--is-focused {
+    border: 1px solid $accent-color-yellow !important;
+    box-shadow: 0 0 0 1px $accent-color-yellow !important;
+}
+
+.react-select__value-container {
+    background-color: $background-color-primary !important;
+    border-radius: 0 !important;
+}
+
+.react-select__placeholder {
+    color: $foreground-color-secondary !important;
+}
+
+.react-select__input {
+    color: $foreground-color-secondary !important;
+}
+
+.react-select__single-value,
+.react-select__value-container--has-value {
+    color: $foreground-color-primary !important;
+}
+
+.react-select__menu {
+    background-color: $background-color-primary !important;
+    border: 1px solid $foreground-color-secondary !important;
+    border-radius: 0 !important;
+    padding-top: 0 !important;
+    color: $foreground-color-secondary !important;
+}
+
+.react-select__indicator {
+    margin-left: 1px;
+    background-color: $background-color-secondary !important;
+}
+
+.react-select__indicator-separator {
+    display: none;
+}
+
+.react-select__option:hover {
+    color: $background-color-primary;
+    background-color: $foreground-color-secondary;
+}
+
+.react-select__option--is-selected {
+    color: red $background-color-primary !important;
+    background-color: $accent-color-yellow !important;
+}
+
+
+.date-picker-container {
+    @extend .navbar-element;
 }
 
 .refresh {
-    color: #fff;
-    margin-right: 10px;
+    color: $foreground-color-secondary;
+    margin-right: 1rem;
     cursor: pointer;
 }
 
-.select {
-    float: left;
-    width: 300px;
-    margin-left: 60px;
-    margin-top: 5px;
+.refresh-icon:hover {
+    color: $foreground-color-primary;
+}
+
+.date-picker {
+    @extend .react-select__value-container;
+    border: 1px solid $foreground-color-secondary !important;
+    height: $navbar-element-height;
+}
+
+input.date-picker {
+    @extend .react-select__input;
+    color: $foreground-color-primary !important;
+    padding: 2px 8px;
+}
+
+input.date-picker:focus {
+    @extend .react-select__control--is-focused;
 }

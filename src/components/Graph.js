@@ -19,8 +19,10 @@ export class Graph extends React.Component {
       nodeIcon: null,
       nodeGroup: null,
       simulation: null,
-      options: [],
+      namespaceOptions: [],
+      objectKindOptions: [],
       namespace: null,
+      kinds: null,
       data: null,
       svg: null,
       g: null,
@@ -34,6 +36,7 @@ export class Graph extends React.Component {
     this.onDateTimeSelect = this.onDateTimeSelect.bind(this);
     this.ticked = this.ticked.bind(this);
     this.handleNamespaceChange = this.handleNamespaceChange.bind(this);
+    this.handleKindChange = this.handleKindChange.bind(this);
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
     this.nodeDetailCard = React.createRef();
@@ -62,17 +65,34 @@ export class Graph extends React.Component {
     });
   }
 
+  handleKindChange(selectList) {
+    console.log(selectList);
+    const kindList = selectList && selectList.length > 0 ? selectList.map(e => e.value) : null;
+    this.setState({
+      kinds: kindList
+    }, () => {
+      this.generateGraph(this.state.data);
+    });
+  }
+
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
       .then((response) => {
         const namespaces = [...new Set(response.data.nodes.map(nodeGroup => nodeGroup.properties ? nodeGroup.properties.namespace : null))];
-        const options = namespaces.map(namespace => ({
+        const namespaceOptions = namespaces.map(namespace => ({
           value: namespace,
           label: namespace
         }));
 
+        const objectTypes = [...new Set(response.data.nodes.map(nodeGroup => nodeGroup.kind))];
+        const objectKindOptions = objectTypes.map(type => ({
+          value: type,
+          label: type
+        }));
+
         this.setState({
-          options: options,
+          namespaceOptions: namespaceOptions,
+          objectKindOptions: objectKindOptions,
           data: response.data
         }, () => {
           this.generateGraph(response.data);
@@ -216,6 +236,10 @@ export class Graph extends React.Component {
         nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
     }
 
+    if(this.state.kinds) {
+      nodes = nodes.filter(nodeGroup => this.state.kinds.includes(nodeGroup.kind));
+    }
+
     const nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
@@ -343,12 +367,14 @@ export class Graph extends React.Component {
         <span className="loader">
           <Loader type="TailSpin" visible={this.state.loading} color='#343a40' />
         </span>
-        <Button className="stats" onClick={this.handleStatButton} variant="dark">
-          STATS
+        <Button className="stats" onClick={this.handleStatButton} variant="outline-dark" size="xs">
+          Stats
         </Button>
         <div id="chart-area" />
         <NodeDetailCard ref={this.nodeDetailCard} />
-        <DateTimePicker onSelect={this.onDateTimeSelect} options={this.state.options} handleNamespaceChange={this.handleNamespaceChange} />
+        <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
+          objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
+          handleKindChange={this.handleKindChange} />
       </div>
     );
   }
