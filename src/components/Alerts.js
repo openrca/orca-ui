@@ -23,25 +23,10 @@ export class Alerts extends React.Component {
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
-        var alerts = response.data.alerts.map(alert => {
+        const alerts = response.data.alerts.map(alert => {
           alert.updated_at = new Date(1000 * alert.updated_at);
           return alert;
         });
-
-        alerts = alerts.reduce((res, cur, index, array) => {
-          let cur1, cur2, cur3, cur4, cur5;
-          cur1 = Object.assign({}, cur);
-          cur2 = Object.assign({}, cur);
-          cur3 = Object.assign({}, cur);
-          cur4 = Object.assign({}, cur);
-          cur5 = Object.assign({}, cur);
-          cur1.id = cur.id + `1`
-          cur2.id = cur.id + `2`
-          cur3.id = cur.id + `3`
-          cur4.id = cur.id + `4`
-          cur5.id = cur.id + `5`
-          return res.concat([cur, cur1, cur2, cur3, cur4, cur5]);
-        }, []) 
 
         this.setState({
           alerts: alerts,
