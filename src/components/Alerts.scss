@@ -1,11 +1,58 @@
 @import "_variables.scss";
 
 .alertTable {
-    width: 1400px;
+    width: 80%;
     margin: 0 auto;
     margin-top: 15px;
 }
 
 .react-bootstrap-table table { 
     table-layout: auto !important; 
+}
+
+.table-dark {
+    background-color: $background-color-primary !important;
+}
+
+.page-item {
+    .page-link {
+        background-color: $background-color-primary !important;
+        border-color: $foreground-color-secondary !important;
+        color: $foreground-color-secondary !important;
+    }
+}
+
+.page-item.active {
+    .page-link {
+        color: $foreground-color-primary !important; 
+    }
+}
+
+#pageDropDown {
+    background-color: $background-color-primary !important;
+    border-color: $foreground-color-secondary !important;
+    color: $foreground-color-primary !important;
+}
+
+.dropdown-menu {
+    background-color: $background-color-primary !important;
+    border-color: $foreground-color-secondary !important;
+}
+
+.dropdown-item {
+    color: $foreground-color-primary !important;
+}
+
+.dropdown-item:hover {
+    color: $background-color-primary !important;
+}
+
+.form-control {
+    background-color: $background-color-primary !important;
+    border-color: $foreground-color-secondary !important;
+    color: $foreground-color-secondary !important;
+
+    option {
+        color: $foreground-color-secondary !important;
+    }
 }

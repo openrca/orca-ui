@@ -23,10 +23,25 @@ export class Alerts extends React.Component {
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
-        const alerts = response.data.alerts.map(alert => {
+        var alerts = response.data.alerts.map(alert => {
           alert.updated_at = new Date(1000 * alert.updated_at);
           return alert;
         });
+
+        alerts = alerts.reduce((res, cur, index, array) => {
+          let cur1, cur2, cur3, cur4, cur5;
+          cur1 = Object.assign({}, cur);
+          cur2 = Object.assign({}, cur);
+          cur3 = Object.assign({}, cur);
+          cur4 = Object.assign({}, cur);
+          cur5 = Object.assign({}, cur);
+          cur1.id = cur.id + `1`
+          cur2.id = cur.id + `2`
+          cur3.id = cur.id + `3`
+          cur4.id = cur.id + `4`
+          cur5.id = cur.id + `5`
+          return res.concat([cur, cur1, cur2, cur3, cur4, cur5]);
+        }, []) 
 
         this.setState({
           alerts: alerts,
@@ -55,8 +70,14 @@ export class Alerts extends React.Component {
     }
 
     return (
-      <span className={`badge ${badgeStyle}`}> {cell} </span>
+      <span className={`badge ${badgeStyle}`}> {cell.toUpperCase()} </span>
     );
+  }
+
+  originFormatter(cell) {
+    return (
+      <span> {cell.charAt(0).toUpperCase() + cell.slice(1)} </span>
+    )
   }
 
   severitySortFunc(a, b, order, dataFiled) {
@@ -80,35 +101,6 @@ export class Alerts extends React.Component {
   }
 
   render() {
-    const pageButtonRenderer = ({
-      page,
-      active,
-      disable,
-      onPageChange
-    }) => {
-      const handleClick = (e) => {
-        e.preventDefault();
-        onPageChange(page);
-      };
-      const activeStyle = {};
-      if(active) {
-        activeStyle.backgroundColor = '#6c757d';
-        activeStyle.color = 'white';
-      } else {
-        activeStyle.color = '#6c757d';
-      }
-
-      return (
-        <li className="page-item">
-          <a className="page-link" href="#" onClick={handleClick} style={activeStyle}>{page}</a>
-        </li>
-      );
-    };
-
-    const paginationOptions = {
-      pageButtonRenderer
-    };
-
     const columns = [{
       dataField: 'severity',
       text: 'Severity',
@@ -127,6 +119,7 @@ export class Alerts extends React.Component {
     }, {
       dataField: 'origin',
       text: 'Origin',
+      formatter: this.originFormatter,
       sort: true,
       filter: selectFilter({
         options: this.getOptions('origin')
@@ -156,7 +149,7 @@ export class Alerts extends React.Component {
           </span>
           : <div className="alertTable" style={{hidden: this.state.loading}}>
             <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} classes="table-dark" bootstrap4 striped hover
-              defaultSorted={defaultSort} pagination={paginationFactory(paginationOptions)} filter={filterFactory()}/>
+              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()}/>
           </div>
         }
       </div>
