@@ -34,7 +34,7 @@ export class DateTimePicker extends React.Component {
     this.setState({
       date: date
     }, () => {
-      this.props.onSelect();
+      this.props.onSelect(date.getTime()/1000);
     });
   }
 
