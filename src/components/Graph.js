@@ -141,7 +141,10 @@ export class Graph extends React.Component {
 
     const simulation = d3.forceSimulation()
       .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
-      .force('charge', d3.forceManyBody().strength(-50))
+      .force('charge', d3.forceManyBody().strength(-80))
+      .force('collide', d3.forceCollide().strength(.7).radius(function(d) {
+        return d.radius
+      }))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
       .on('tick', this.ticked);
