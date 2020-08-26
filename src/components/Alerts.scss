@@ -1,9 +1,19 @@
 @import "_variables.scss";
 
 .alertTable {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
-    margin-top: 15px;
+    margin-top: 50px;
+
+    thead {
+        th {
+            background-color: #343a40;
+
+            label {
+                margin-top: 8px;
+            }
+        }
+    }
 }
 
 .react-bootstrap-table table { 
@@ -17,26 +27,28 @@
 .page-item {
     .page-link {
         background-color: $background-color-primary !important;
-        border-color: $foreground-color-secondary !important;
+        border-color: #222526 !important;
         color: $foreground-color-secondary !important;
+        box-shadow: none !important;
     }
 }
 
 .page-item.active {
     .page-link {
-        color: $foreground-color-primary !important; 
+        color: $foreground-color-primary !important;
     }
 }
 
 #pageDropDown {
     background-color: $background-color-primary !important;
-    border-color: $foreground-color-secondary !important;
+    border-color: #222526 !important;
     color: $foreground-color-primary !important;
+    box-shadow: none !important;
 }
 
 .dropdown-menu {
     background-color: $background-color-primary !important;
-    border-color: $foreground-color-secondary !important;
+    border-color: #222526 !important;
 }
 
 .dropdown-item {
@@ -51,8 +63,36 @@
     background-color: $background-color-primary !important;
     border-color: $foreground-color-secondary !important;
     color: $foreground-color-secondary !important;
+    font-style: normal !important;
+    box-shadow: none !important;
 
     option {
         color: $foreground-color-secondary !important;
+        font-style: normal !important;
     }
+
+    option:hover {
+        box-shadow: 0 0 10px 10px #e1358f inset;
+    }
+}
+
+// Placeholders
+::-webkit-input-placeholder {
+    font-style: normal !important;
+    color: $foreground-color-secondary !important;
+}
+
+:-moz-placeholder {
+    font-style: normal !important;
+    color: $foreground-color-secondary !important;
+}
+
+::-moz-placeholder {
+    font-style: normal !important;
+    color: $foreground-color-secondary !important;
+}
+
+:-ms-input-placeholder {  
+    font-style: normal !important;
+    color: $foreground-color-secondary !important;
 }

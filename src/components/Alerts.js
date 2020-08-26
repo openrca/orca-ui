@@ -134,7 +134,7 @@ export class Alerts extends React.Component {
           </span>
           : <div className="alertTable" style={{hidden: this.state.loading}}>
             <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} classes="table-dark" bootstrap4 striped hover
-              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()}/>
+              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()} bordered={false}/>
           </div>
         }
       </div>
