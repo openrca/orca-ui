@@ -46,4 +46,12 @@ $node-class-fill-map: ("alert": #cc241d,
     "service": #8f3f71,
     "stateful_set": #98971a,
     "storage_class": #b16286,
-)
+);
+
+$navbar-element-height: 38px;
+
+.navbar-element {
+    display     : inline-block;
+    margin-right: 1rem;
+    height      : $navbar-element-height;
+}

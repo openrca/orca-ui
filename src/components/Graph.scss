@@ -32,6 +32,12 @@ text.node-icon.alert {
     animation: blink 0.8s infinite;
 }
 
+text.node-label {
+    fill: $foreground-color-secondary;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
 g.node-group.clicked {
     filter: brightness(130%);
 }
