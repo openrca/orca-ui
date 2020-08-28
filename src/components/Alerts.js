@@ -55,8 +55,14 @@ export class Alerts extends React.Component {
     }
 
     return (
-      <span className={`badge ${badgeStyle}`}> {cell} </span>
+      <span className={`badge ${badgeStyle}`}> {cell.toUpperCase()} </span>
     );
+  }
+
+  originFormatter(cell) {
+    return (
+      <span> {cell.charAt(0).toUpperCase() + cell.slice(1)} </span>
+    )
   }
 
   severitySortFunc(a, b, order, dataFiled) {
@@ -80,35 +86,6 @@ export class Alerts extends React.Component {
   }
 
   render() {
-    const pageButtonRenderer = ({
-      page,
-      active,
-      disable,
-      onPageChange
-    }) => {
-      const handleClick = (e) => {
-        e.preventDefault();
-        onPageChange(page);
-      };
-      const activeStyle = {};
-      if(active) {
-        activeStyle.backgroundColor = '#6c757d';
-        activeStyle.color = 'white';
-      } else {
-        activeStyle.color = '#6c757d';
-      }
-
-      return (
-        <li className="page-item">
-          <a className="page-link" href="#" onClick={handleClick} style={activeStyle}>{page}</a>
-        </li>
-      );
-    };
-
-    const paginationOptions = {
-      pageButtonRenderer
-    };
-
     const columns = [{
       dataField: 'severity',
       text: 'Severity',
@@ -127,6 +104,7 @@ export class Alerts extends React.Component {
     }, {
       dataField: 'origin',
       text: 'Origin',
+      formatter: this.originFormatter,
       sort: true,
       filter: selectFilter({
         options: this.getOptions('origin')
@@ -156,7 +134,7 @@ export class Alerts extends React.Component {
           </span>
           : <div className="alertTable" style={{hidden: this.state.loading}}>
             <BootstrapTable keyField='id' data={this.state.alerts} columns={columns} classes="table-dark" bootstrap4 striped hover
-              defaultSorted={defaultSort} pagination={paginationFactory(paginationOptions)} filter={filterFactory()}/>
+              defaultSorted={defaultSort} pagination={paginationFactory()} filter={filterFactory()} bordered={false}/>
           </div>
         }
       </div>
