@@ -52,8 +52,8 @@ export class Graph extends React.Component {
     this.loadData();
   }
 
-  onDateTimeSelect() {
-    this.loadData();
+  onDateTimeSelect(timestamp) {
+    this.loadData(timestamp);
   }
 
   handleNamespaceChange(e) {
@@ -75,8 +75,9 @@ export class Graph extends React.Component {
     });
   }
 
-  loadData() {
-    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph')
+  loadData(timestamp = null) {
+    const param = timestamp ? `?time_point=${timestamp}` : '';
+    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph' + param)
       .then((response) => {
         const namespaces = [...new Set(response.data.nodes.map(nodeGroup => nodeGroup.properties ? nodeGroup.properties.namespace : null))];
         const namespaceOptions = namespaces.map(namespace => ({
