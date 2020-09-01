@@ -19,7 +19,7 @@ $navbar-element-height: 38px;
 .react-select__control {
     width: 15rem;
     background-color: $foreground-color-secondary !important;
-    border: 1px solid $foreground-color-secondary !important;
+    border: 1px solid $background-color-primary !important;
     border-radius: 0 !important;
 }
 
@@ -48,7 +48,7 @@ $navbar-element-height: 38px;
 
 .react-select__menu {
     background-color: $background-color-primary !important;
-    border: 1px solid $foreground-color-secondary !important;
+    border: 1px solid $background-color-primary !important;
     border-radius: 0 !important;
     padding-top: 0 !important;
     color: $foreground-color-secondary !important;
@@ -90,7 +90,7 @@ $navbar-element-height: 38px;
 
 .date-picker {
     @extend .react-select__value-container;
-    border: 1px solid $foreground-color-secondary !important;
+    border: 1px solid $background-color-primary !important;
     height: $navbar-element-height;
 }
 
