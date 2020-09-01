@@ -23,7 +23,7 @@ export class Alerts extends React.Component {
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
-        const alerts = response.data.alerts.map(alert => {
+        const alerts = response.data.map(alert => {
           alert.updated_at = new Date(1000 * alert.updated_at);
           return alert;
         });
