@@ -1,89 +1,223 @@
-{
-    "alerts": [
-        {
-            "id": "123",
-            "origin": "prometheus",
-            "severity": "critical",
-            "name": "SomethingHorribleHappenedWithAPod",
-            "message": "It's bad :(",
-            "source": {
-                "origin": "kubernetes",
-                "kind": "pod",
-                "properties": {
-                    "name": "elasticsearch",
-                    "namespace": "logging"
-                }
-            },
-            "created_at": 1583238896,
-            "updated_at": 1583238896
+[
+    {
+        "id": "falco-alert-attach/exec-pod-pod-arangodb-7fc5bc8fbc-bz7w2-rca",
+        "origin": "falco",
+        "name": "Attach/Exec Pod",
+        "message": "18:27:54.593231872: Notice Attach/Exec to pod (user=kubernetes-admin pod=arangodb-7fc5bc8fbc-bz7w2 ns=rca action=exec command=python3)",
+        "severity": "Notice",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
         },
-        {
-            "id": "234",
-            "origin": "prometheus",
-            "severity": "warning",
-            "name": "SomethingHorribleHappenedWithAPod",
-            "message": "It's bad :(",
-            "source": {
-                "origin": "kubernetes",
-                "kind": "pod",
-                "properties": {
-                    "name": "elasticsearch",
-                    "namespace": "logging"
-                }
-            },
-            "created_at": 1583238896,
-            "updated_at": 1583238896
+        "created_at": "1598293671",
+        "updated_at": "1598293683"
+    },
+    {
+        "id": "falco-alert-attach/exec-pod-pod-orca-a70b29180ad94f82b9b07f69a45a8d87-7c7b7dcdcb-rdhhg-rca",
+        "origin": "falco",
+        "name": "Attach/Exec Pod",
+        "message": "18:28:39.826964992: Notice Attach/Exec to pod (user=kubernetes-admin pod=orca-a70b29180ad94f82b9b07f69a45a8d87-7c7b7dcdcb-rdhhg ns=rca action=exec command=sh)",
+        "severity": "Notice",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
         },
-        {
-            "id": "345",
-            "origin": "falco",
-            "severity": "info",
-            "name": "SomethingHorribleHappenedWithAPod",
-            "message": "It's bad :(",
-            "source": {
-                "origin": "kubernetes",
-                "kind": "pod",
-                "properties": {
-                    "name": "elasticsearch",
-                    "namespace": "logging"
-                }
-            },
-            "created_at": 1583238896,
-            "updated_at": 1583238896
+        "created_at": "1598293705",
+        "updated_at": "1598293727"
+    },
+    {
+        "id": "prometheus-alert-cputhrottlinghigh-pod-metrics-server-8654479566-97v5c-kube-system",
+        "origin": "prometheus",
+        "name": "CPUThrottlingHigh",
+        "message": "40.81% throttling of CPU in namespace kube-system for container metrics-server in pod metrics-server-8654479566-97v5c.",
+        "severity": "warning",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
         },
-        {
-            "id": "456",
-            "origin": "prometheus",
-            "severity": "critical",
-            "name": "SomethingHorribleHappenedWithAPod",
-            "message": "It's bad :(",
-            "source": {
-                "origin": "kubernetes",
-                "kind": "pod",
-                "properties": {
-                    "name": "elasticsearch",
-                    "namespace": "logging"
-                }
-            },
-            "created_at": 1583238896,
-            "updated_at": 1583238896
+        "created_at": "1598290941",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-cputhrottlinghigh-pod-loadgenerator-8bcc5fd79-8qpzb-default",
+        "origin": "prometheus",
+        "name": "CPUThrottlingHigh",
+        "message": "60.66% throttling of CPU in namespace default for container main in pod loadgenerator-8bcc5fd79-8qpzb.",
+        "severity": "warning",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
         },
-        {
-            "id": "567",
-            "origin": "zabbix",
-            "severity": "critical",
-            "name": "SomethingHorribleHappenedWithAPod",
-            "message": "It's bad :(",
-            "source": {
-                "origin": "kubernetes",
-                "kind": "pod",
-                "properties": {
-                    "name": "elasticsearch",
-                    "namespace": "logging"
-                }
-            },
-            "created_at": 1583238896,
-            "updated_at": 1583238896
-        }
-    ]
-}
+        "created_at": "1598619679",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedaemonsetrolloutstuck-daemon_set-kube-proxy-kube-system",
+        "origin": "prometheus",
+        "name": "KubeDaemonSetRolloutStuck",
+        "message": "Only 75% of the desired Pods of DaemonSet kube-system/kube-proxy are scheduled and ready.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544456",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubepodcrashlooping-pod-istio-tracing-c7b59f68f-grjtr-istio-system",
+        "origin": "prometheus",
+        "name": "KubePodCrashLooping",
+        "message": "Pod istio-system/istio-tracing-c7b59f68f-grjtr (jaeger) is restarting 1.11 times / 5 minutes.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598972662",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-targetdown-service-prometheus-prometheus-oper-kube-proxy-kube-system",
+        "origin": "prometheus",
+        "name": "TargetDown",
+        "message": "100% of the kube-proxy targets in kube-system namespace are down.",
+        "severity": "warning",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598290940",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedaemonsetrolloutstuck-daemon_set-fluent-bit-logging",
+        "origin": "prometheus",
+        "name": "KubeDaemonSetRolloutStuck",
+        "message": "Only 75% of the desired Pods of DaemonSet logging/fluent-bit are scheduled and ready.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544519",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedaemonsetrolloutstuck-daemon_set-nodelocaldns-kube-system",
+        "origin": "prometheus",
+        "name": "KubeDaemonSetRolloutStuck",
+        "message": "Only 75% of the desired Pods of DaemonSet kube-system/nodelocaldns are scheduled and ready.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544456",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubecontainerwaiting-pod-istio-tracing-c7b59f68f-grjtr-istio-system",
+        "origin": "prometheus",
+        "name": "KubeContainerWaiting",
+        "message": "Pod istio-system/istio-tracing-c7b59f68f-grjtr container jaeger has been in waiting state for longer than 1 hour.",
+        "severity": "warning",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598972358",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedaemonsetrolloutstuck-daemon_set-falco-falco",
+        "origin": "prometheus",
+        "name": "KubeDaemonSetRolloutStuck",
+        "message": "Only 75% of the desired Pods of DaemonSet falco/falco are scheduled and ready.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544519",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedaemonsetrolloutstuck-daemon_set-registry-proxy-kube-system",
+        "origin": "prometheus",
+        "name": "KubeDaemonSetRolloutStuck",
+        "message": "Only 75% of the desired Pods of DaemonSet kube-system/registry-proxy are scheduled and ready.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544519",
+        "updated_at": "1598972722"
+    },
+    {
+        "id": "prometheus-alert-kubedeploymentreplicasmismatch-deployment-istio-tracing-istio-system",
+        "origin": "prometheus",
+        "name": "KubeDeploymentReplicasMismatch",
+        "message": "Deployment istio-system/istio-tracing has not matched the expected number of replicas for longer than 15 minutes.",
+        "severity": "critical",
+        "source": {
+            "origin": null,
+            "kind": null,
+            "properties": {
+                "name": null,
+                "namespace": "n/a"
+            }
+        },
+        "created_at": "1598544581",
+        "updated_at": "1598972722"
+    }
+]
