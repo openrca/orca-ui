@@ -141,7 +141,7 @@ export class Graph extends React.Component {
 
     const simulation = d3.forceSimulation()
       .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
-      .force('charge', d3.forceManyBody().strength(-80))
+      .force('charge', d3.forceManyBody().strength(-300))
       .force('collide', d3.forceCollide().strength(.7).radius(function(d) {
         return d.radius
       }))
@@ -221,7 +221,7 @@ export class Graph extends React.Component {
   filterK8sNodesOtherNamespace(nodes, links) {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'node').filter(node => {
       var valid = false;
-      const clusterNames = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster').map(cluster => cluster.id); 
+      const clusterNames = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster').map(cluster => cluster.id);
       const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target)));
 
       linksWithoutClusters.forEach(link => {
@@ -237,7 +237,7 @@ export class Graph extends React.Component {
 
     //Filter by namespace
     if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' || 
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' ||
         nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
     }
 
@@ -247,13 +247,13 @@ export class Graph extends React.Component {
     //Filter alerts
     const alertsOtherNamespace = this.filterAlertOtherNamespace(nodes, links);
     nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
-    
+
     //Filter nodes
     if(this.state.namespace !== '{}'){
       const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
       const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
       const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
-    
+
       nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
       links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
     }
