@@ -19,30 +19,27 @@
 
 .card .card-title {
     text-align: center;
-    text-transform: capitalize;
     color: $text-color-light;
 }
 
 .card .card-subtitle {
     text-align: center;
     color: $text-color-light;
+    text-transform: capitalize;
 }
 
-.card .node-info-text {
-    text-align: left;
+.card .node-info-text table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}
+
+.card .node-info-text span{
+    color: #d1e4ff !important;
 }
 
 .card button.close {
     margin    : 1rem;
     text-align: right;
-    color: #d1e4ff;
-}
-
-.card pre {
-    // line wrapping in json card (to avoid h-scrollbar)
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
     color: #d1e4ff;
 }

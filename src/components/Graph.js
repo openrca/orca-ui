@@ -357,8 +357,17 @@ export class Graph extends React.Component {
       stat[nodeGroup.kind] ? stat[nodeGroup.kind] += 1 : stat[nodeGroup.kind] = 1;
       return stat;
     }, stat);
+
+    const statList = [];
+    Object.keys(stat).forEach(key => {
+      statList.push({
+        type: key,
+        count: stat[key]
+      });
+    });
+
     this.setState({
-      stat: stat
+      stat: statList
     });
   }
 
@@ -367,7 +376,7 @@ export class Graph extends React.Component {
     this.nodeDetailCard.current.updateNodeData({
       kind: 'Statistics',
       properties: this.state.stat
-    });
+    }, true);
     this.nodeDetailCard.current.show();
   }
 

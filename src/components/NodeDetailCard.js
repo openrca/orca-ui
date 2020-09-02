@@ -1,5 +1,6 @@
 import React from 'react';
 import './NodeDetailCard.scss';
+import JSONViewer from 'react-json-viewer';
 
 
 export class NodeDetailCard extends React.Component {
@@ -12,14 +13,29 @@ export class NodeDetailCard extends React.Component {
           name: ''
         }
       },
-      hidden: true
+      hidden: true,
+      displayProperties: {}
     };
 
     this.hide = this.hide.bind(this);
   }
 
-  updateNodeData(nodeData) {
-    this.setState({ nodeData: nodeData });
+  updateNodeData(nodeData, statistics = false) {
+    let displayProperties = nodeData.properties;
+    if(!statistics) {
+      displayProperties = Object.keys(nodeData.properties).reduce((object, key) => {
+        if(key !== 'name'){
+          object[key] = nodeData.properties[key];
+        }
+  
+        return object;
+      }, {});
+    }
+    
+    this.setState({ 
+      nodeData: nodeData,
+      displayProperties: displayProperties 
+    });
   }
 
   hide() {
@@ -37,14 +53,10 @@ export class NodeDetailCard extends React.Component {
           <span aria-hidden="true">&times;</span>
         </button>
         <div className="card-body mt-0 pt-0">
-          <h4 className="card-title">{this.state.nodeData.kind.replace('_', ' ')}</h4>
-          <h5 className="card-subtitle">{this.state.nodeData.properties.name}</h5>
+          <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
+          <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            <pre>{JSON.stringify(this.state.nodeData.properties, function (k, v) {
-              if (k !== 'name') {
-                return v;
-              }
-            }, 2)}</pre>
+            <JSONViewer json={this.state.displayProperties} />
           </div>
         </div>
       </div>
