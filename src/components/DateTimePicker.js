@@ -79,6 +79,7 @@ export class DateTimePicker extends React.Component {
             placeholder="Select Objects.."
             onChange={(e) => this.props.handleKindChange(e)}
             isMulti
+            defaultValue = {this.props.defaultKinds}
             theme={theme => ({
               ...theme,
               colors: {
