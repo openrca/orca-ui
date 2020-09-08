@@ -310,7 +310,7 @@ export class Graph extends React.Component {
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('y', this.nodeCircleRadius * 2)
-      .text((d) => d.kind.replace('_', ' '));
+      .text((d) => d.properties.name);
 
     const link = this.state.link
       .data(links, d => [d.source, d.target])
