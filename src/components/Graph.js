@@ -117,13 +117,13 @@ export class Graph extends React.Component {
 
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
-    nodeGroup.select('circle').attr('r', this.nodeCircleRadius * multiplier);
-    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
+    nodeGroup.selectAll('text').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
   }
 
   nodeMouseOut(nodeGroup) {
-    nodeGroup.select('circle').attr('r', this.nodeCircleRadius);
-    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
+    nodeGroup.selectAll('text').attr('font-size', `${this.nodeIconFontSize}px`);
   }
 
   nodeClick(nodeGroup, nodeData) {
