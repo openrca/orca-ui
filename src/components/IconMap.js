@@ -5,6 +5,7 @@ export const IconMap = {
   'daemon_set': '\uf7d9',
   'deployment': '\uf468',
   'endpoints': '\uf7c0',
+  'horizontal_pod_autoscaler': '\uf24e',
   'ingress': '\uf0e8',
   'node': '\uf233',
   'persistent_volume': '\uf0a0',
