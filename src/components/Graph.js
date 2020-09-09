@@ -103,7 +103,8 @@ export class Graph extends React.Component {
           namespaceOptions: namespaceOptions,
           objectKindOptions: objectKindOptions,
           data: response.data
-        }, () => {
+        }, async () => {
+          if(!timestamp) setTimeout(this.graphLoad, 2000);
           this.generateGraph(response.data);
         });
       })
@@ -186,8 +187,6 @@ export class Graph extends React.Component {
       simulation: simulation,
       svg: svg,
       g: g
-    }, () => {
-      setTimeout(this.graphLoad, 2000);
     });
   }
 
@@ -212,6 +211,8 @@ export class Graph extends React.Component {
     const graphY = g.node().getBBox().y;
     const graphWidth = g.node().getBBox().width;
     const graphHeight = g.node().getBBox().height;
+
+    if(graphWidth === 0 || graphHeight === 0) return;
 
     const scale = 0.95 / Math.max(graphWidth / width, graphHeight / height);
 
