@@ -21,6 +21,7 @@ export class Graph extends React.Component {
       simulation: null,
       namespaceOptions: [],
       objectKindOptions: [],
+      showLabels: false,
       namespace: null,
       kinds: ['cluster', 'node', 'pod', 'alert'],
       data: null,
@@ -39,10 +40,12 @@ export class Graph extends React.Component {
     this.handleKindChange = this.handleKindChange.bind(this);
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
+    this.nodeLabelFontSize = 16;
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
     this.handleStatButton = this.handleStatButton.bind(this);
+    this.toggleNodeLabels = this.toggleNodeLabels.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +57,11 @@ export class Graph extends React.Component {
 
   onDateTimeSelect(timestamp) {
     this.loadData(timestamp);
+  }
+
+  toggleNodeLabels(e) {
+    this.setState({showLabels: !this.state.showLabels});
+    d3.selectAll('.node-label').classed('hidden', this.state.showLabels);
   }
 
   handleNamespaceChange(e) {
@@ -110,13 +118,17 @@ export class Graph extends React.Component {
 
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
-    nodeGroup.select('circle').attr('r', this.nodeCircleRadius * multiplier);
-    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .attr('y', this.nodeCircleRadius * 2 * multiplier);
   }
 
   nodeMouseOut(nodeGroup) {
-    nodeGroup.select('circle').attr('r', this.nodeCircleRadius);
-    nodeGroup.select('text').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
+      .attr('y', this.nodeCircleRadius * 2);
   }
 
   nodeClick(nodeGroup, nodeData) {
@@ -143,7 +155,7 @@ export class Graph extends React.Component {
       .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
       .force('charge', d3.forceManyBody().strength(-300))
       .force('collide', d3.forceCollide().strength(.7).radius(function(d) {
-        return d.radius
+        return d.radius;
       }))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
@@ -161,11 +173,16 @@ export class Graph extends React.Component {
     const nodeIcon = g.append('g')
       .selectAll('text');
 
+    const nodeLabel = g.append('g')
+      .selectAll('text');
+
     this.setState({
       link: link,
       nodeGroup: nodeGroup,
       nodeCircle: nodeCircle,
       nodeIcon: nodeIcon,
+      nodeLabel: nodeLabel,
+      showLabels: false,
       simulation: simulation,
       svg: svg,
       g: g
@@ -292,6 +309,15 @@ export class Graph extends React.Component {
       .attr('font-size', `${this.nodeIconFontSize}px`)
       .text((d) => IconMap[d.kind]);
 
+    const nodeLabel = nodeGroup.append('text')
+      .attr('class', 'node-label')
+      .classed('hidden', !this.state.showLabels)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', `${this.nodeLabelFontSize}px`)
+      .attr('y', this.nodeCircleRadius * 2)
+      .text((d) => d.properties.name);
+
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line')
@@ -306,6 +332,7 @@ export class Graph extends React.Component {
       nodeCircle: nodeCircle,
       nodeIcon: nodeIcon,
       nodeGroup: nodeGroup,
+      showLabels: !nodeLabel.classed('hidden'),
       link: link
     }, () => {
       this.state.simulation.nodes(nodes);
@@ -384,7 +411,8 @@ export class Graph extends React.Component {
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
-          handleKindChange={this.handleKindChange} defaultKinds={this.state.kinds ? this.state.kinds.map(kind => {
+          handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels} 
+          defaultKinds={this.state.kinds ? this.state.kinds.map(kind => {
             return {
               label: kind,
               value: kind

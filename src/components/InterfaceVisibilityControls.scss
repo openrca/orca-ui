@@ -1,0 +1,9 @@
+@import "_variables.scss";
+
+.interface-visibility-controls-containe {
+    @extend .navbar-element;
+}
+
+.custom-control-label.text {
+    color: $foreground-color-primary;
+}

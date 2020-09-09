@@ -7,13 +7,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import './DateTimePicker.scss';
 
+import { InterfaceVisibilityControls } from './InterfaceVisibilityControls';
+
 export class DateTimePicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       date: new Date(),
       namespaceOptions: this.props.namespaceOptions,
-      objectKindOptions: this.props.objectKindOptions
+      objectKindOptions: this.props.objectKindOptions,
+      showLabels: this.props.showLabels
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
@@ -22,12 +25,15 @@ export class DateTimePicker extends React.Component {
   componentDidUpdate(){
     this.setState({
       namespaceOptions: this.props.namespaceOptions,
-      objectKindOptions: this.props.objectKindOptions
+      objectKindOptions: this.props.objectKindOptions,
+      showLabels: this.props.showLabels
     });
   }
 
-  shouldComponentUpdate(nextProps){
-    return this.state.namespaceOptions !== nextProps.namespaceOptions || this.state.objectKindOptions !== nextProps.objectKindOptions;
+  shouldComponentUpdate(nextProps) {
+    return this.state.namespaceOptions !== nextProps.namespaceOptions ||
+      this.state.objectKindOptions !== nextProps.objectKindOptions ||
+      this.state.showLabels !== nextProps.showLabels;
   }
 
   handleDateChange(date) {
@@ -92,6 +98,8 @@ export class DateTimePicker extends React.Component {
             isClearable
           />
         </div>
+
+        <InterfaceVisibilityControls showLabels={this.state.showLabels} toggleNodeLabels={this.props.toggleNodeLabels} />
       </Navbar>
     );
   }
