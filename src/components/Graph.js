@@ -40,6 +40,7 @@ export class Graph extends React.Component {
     this.handleKindChange = this.handleKindChange.bind(this);
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
+    this.nodeLabelFontSize = 16;
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
@@ -118,12 +119,16 @@ export class Graph extends React.Component {
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
-    nodeGroup.selectAll('text').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .attr('y', this.nodeCircleRadius * 2 * multiplier);
   }
 
   nodeMouseOut(nodeGroup) {
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
-    nodeGroup.selectAll('text').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
+      .attr('y', this.nodeCircleRadius * 2);
   }
 
   nodeClick(nodeGroup, nodeData) {
@@ -309,6 +314,7 @@ export class Graph extends React.Component {
       .classed('hidden', !this.state.showLabels)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
+      .attr('font-size', `${this.nodeLabelFontSize}px`)
       .attr('y', this.nodeCircleRadius * 2)
       .text((d) => d.properties.name);
 
