@@ -6,9 +6,9 @@
 
 This repository contains the source code for the OpenRCA web interface.
 
-|              Graph View              |             Graph Filtering                    |             Alerts View                |
-| :----------------------------------: | :--------------------------------------------: | :------------------------------------: |
-| ![Graph View](./docs/graph-view.png) | ![Graph Filtering](./docs/graph-filtering.png) | ![Alerts View](./docs/alerts-view.png) |
+|              Cluster View              |             Cluster Filtering                  |             Alerts View                |
+| :------------------------------------: | :--------------------------------------------: | :------------------------------------: |
+| ![Graph View](./docs/graph-view.png)   | ![Graph Filtering](./docs/graph-filtering.png) | ![Alerts View](./docs/alerts-view.png) |
 
 ## Usage
 
