@@ -9,6 +9,18 @@ import { NodeDetailCard } from './NodeDetailCard';
 import { IconMap } from './IconMap';
 import './Graph.scss';
 
+function truncate(fullStr, strLen, separator='...') {
+  if (fullStr.length <= strLen) return fullStr;
+
+  const sepLen = separator.length,
+    charsToShow = strLen - sepLen,
+    frontChars = Math.ceil(charsToShow / 2),
+    backChars = Math.floor(charsToShow / 2);
+
+  return fullStr.substr(0, frontChars) +
+    separator +
+    fullStr.substr(fullStr.length - backChars);
+}
 
 export class Graph extends React.Component {
   constructor(props) {
@@ -41,6 +53,7 @@ export class Graph extends React.Component {
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
     this.nodeLabelFontSize = 16;
+    this.nodeLabelLength = 18;
     this.nodeDetailCard = React.createRef();
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
@@ -122,14 +135,16 @@ export class Graph extends React.Component {
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
-      .attr('y', this.nodeCircleRadius * 2 * multiplier);
+      .attr('y', this.nodeCircleRadius * 2 * multiplier)
+      .text((d) => d.properties.name);
   }
 
   nodeMouseOut(nodeGroup) {
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
-      .attr('y', this.nodeCircleRadius * 2);
+      .attr('y', this.nodeCircleRadius * 2)
+      .text((d) => truncate(d.properties.name, this.nodeLabelLength));
   }
 
   nodeClick(nodeGroup, nodeData) {
@@ -317,7 +332,7 @@ export class Graph extends React.Component {
       .attr('dominant-baseline', 'middle')
       .attr('font-size', `${this.nodeLabelFontSize}px`)
       .attr('y', this.nodeCircleRadius * 2)
-      .text((d) => d.properties.name);
+      .text((d) => truncate(d.properties.name, this.nodeLabelLength));
 
     const link = this.state.link
       .data(links, d => [d.source, d.target])
