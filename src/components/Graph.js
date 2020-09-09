@@ -384,12 +384,12 @@ export class Graph extends React.Component {
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
-          handleKindChange={this.handleKindChange} defaultKinds={this.state.kinds.map(kind => {
+          handleKindChange={this.handleKindChange} defaultKinds={this.state.kinds ? this.state.kinds.map(kind => {
             return {
               label: kind,
               value: kind
             }
-          })}/>
+          }) : null}/>
       </div>
     );
   }
