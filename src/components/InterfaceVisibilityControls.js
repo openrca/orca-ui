@@ -22,8 +22,7 @@ export class InterfaceVisibilityControls extends React.Component {
     return (
       <div className='interface-visibility-controls-container'>
         <div class="custom-control custom-switch">
-          <input type="checkbox" className="custom-control-input" id="customSwitch1" checked={this.props.showLabels} onChange={(e) => this.props.toggleNodeLabels(e)} />
-          <label class="custom-control-label" for="customSwitch1">show labels</label>
+          <input type="checkbox" checked={this.props.showLabels} onChange={(e) => this.props.toggleNodeLabels(e)} />
         </div>
       </div>
     );
