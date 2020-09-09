@@ -4,14 +4,6 @@
     height: $navbar-bottom-height;
 }
 
-$navbar-element-height: 38px;
-
-.navbar-element {
-    display: inline-block;
-    margin-right: 1rem;
-    height: $navbar-element-height;
-}
-
 .selector-container {
     @extend .navbar-element;
 }
