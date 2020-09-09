@@ -44,3 +44,11 @@
     text-align: right;
     color: #d1e4ff;
 }
+
+.card .node-info-text table {
+    width: 100%;
+
+    th, td {
+        text-align: center !important;
+    }
+}
