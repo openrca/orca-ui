@@ -103,7 +103,7 @@ export class Graph extends React.Component {
           namespaceOptions: namespaceOptions,
           objectKindOptions: objectKindOptions,
           data: response.data
-        }, async () => {
+        }, () => {
           if(!timestamp) setTimeout(this.graphLoad, 2000);
           this.generateGraph(response.data);
         });
