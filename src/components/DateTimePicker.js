@@ -78,7 +78,7 @@ export class DateTimePicker extends React.Component {
         </div>
         <div className="selector-container">
           <Select
-            className='react-select-container'
+            className='react-select-container-type'
             classNamePrefix="react-select"
             menuPlacement="top"
             options={this.state.objectKindOptions}
