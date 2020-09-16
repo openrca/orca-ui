@@ -9884,11 +9884,6 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
-react-json-viewer@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-json-viewer/-/react-json-viewer-2.1.0.tgz#42234f715d2af95a7993759b1bf7b3c8e7fbf854"
-  integrity sha512-9TeJ+zqmCLueLv/OJ5JFEl/0VQqJzhiRjsbVvc9YocUuhMebWGHJ0RLPERPwpUZnlfJvaaowpj/HcdNMmVaAQg==
-
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
