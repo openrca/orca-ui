@@ -24,7 +24,6 @@ export class NodeDetailCard extends React.Component {
 
   updateNodeData(nodeData, statistics = false) {
     let displayProperties = nodeData.properties;
-    console.log(displayProperties)
     if(!statistics) {
       displayProperties = Object.keys(nodeData.properties).reduce((object, key) => {
         if(key !== 'name'){
@@ -42,8 +41,6 @@ export class NodeDetailCard extends React.Component {
         return object;
       });
     }
-
-    console.log(displayProperties)
     
     this.setState({ 
       nodeData: nodeData,
@@ -84,7 +81,6 @@ export class NodeDetailCard extends React.Component {
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            {/*<JSONViewer json={this.state.displayProperties} />*/}
             <BootstrapTable keyField='id' data={this.state.displayProperties} columns={this.state.statistics ? columnsStats : columns} 
               classes="table-dark" bootstrap4 striped hover/>
           </div>
