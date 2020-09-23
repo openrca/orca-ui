@@ -65,7 +65,7 @@ export class DateTimePicker extends React.Component {
             maxDate={new Date()}
           />
         </div>
-        <div className="selector-container">
+        <div className="selector-container" id="namespace-selector-container">
           <Select
             className='react-select-container'
             classNamePrefix="react-select"
@@ -76,7 +76,7 @@ export class DateTimePicker extends React.Component {
             isClearable
           />
         </div>
-        <div className="selector-container">
+        <div className="selector-container" id="object-selector-container">
           <Select
             className='react-select-container'
             classNamePrefix="react-select"
