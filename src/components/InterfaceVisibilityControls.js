@@ -1,4 +1,5 @@
 import React from 'react';
+import './InterfaceVisibilityControls.scss';
 
 export class InterfaceVisibilityControls extends React.Component {
   constructor(props) {
@@ -14,15 +15,18 @@ export class InterfaceVisibilityControls extends React.Component {
     });
   }
 
-  shouldComponentUpdate(nextProps){
+  shouldComponentUpdate(nextProps) {
     return this.state.showLabels !== nextProps.showLabels;
   }
 
   render() {
     return (
       <div className='interface-visibility-controls-container'>
-        <div class="custom-control custom-switch">
-          <input type="checkbox" checked={this.props.showLabels} onChange={(e) => this.props.toggleNodeLabels(e)} />
+        <div className="custom-control custom-switch custom-switch-sm">
+          <input className="custom-control-input" id="labels-toggle" type="checkbox" checked={this.props.showLabels} onChange={(e) => this.props.toggleNodeLabels(e)} />
+          <label className="custom-control-label" for="labels-toggle">
+            <span className="custom-control-text">labels</span>
+          </label>
         </div>
       </div>
     );
