@@ -6,6 +6,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { textFilter, selectFilter, dateFilter } from 'react-bootstrap-table2-filter';
 
 import './Alerts.scss';
+import './Table.scss';
 
 export class Alerts extends React.Component {
   constructor(props){
