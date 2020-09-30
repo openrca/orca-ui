@@ -264,6 +264,21 @@ export class Graph extends React.Component {
     });
   }
 
+  getNeighbours(links, object) {
+    const objectLinks = links.filter(link => link.source === object || link.target === object);
+    const neighbours = [];
+    objectLinks.forEach(link => {
+      if(link.source === object) {
+        neighbours.push(link.target);
+      } else {
+        neighbours.push(link.source);
+      }
+
+      return true;
+    })
+    return neighbours;
+  }
+
   generateGraph(data) {
     var links = data.links;
     var nodes = d3.values(data.nodes);
@@ -301,6 +316,31 @@ export class Graph extends React.Component {
 
     const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
+
+    const alerts = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').map(alert => alert.id);
+    const faultNodes = [];
+
+    links.forEach(link => {
+      if(alerts.includes(link.source) || alerts.includes(link.target)) {
+        const object = alerts.includes(link.source) ? link.target : link.source;
+        const objectNeighs = this.getNeighbours(links, object);
+        objectNeighs.forEach(neigh => {
+          const neighNeighs = this.getNeighbours(links, neigh);
+          neighNeighs.forEach(neigh2 => {
+            if(alerts.includes(neigh2)) {
+              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) 
+              || (faultLink.source === object && faultLink.target === neigh))[0];
+              faultLink.fault = true;
+              if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
+              if(!faultNodes.includes(faultLink.target)) faultNodes.push(faultLink.target);
+            }
+          })
+          return true;
+        })
+      }      
+      return true;
+    });
+    
     links = links.map(d => Object.assign({}, d));
 
     const nodeGroup = this.state.nodeGroup
@@ -312,7 +352,7 @@ export class Graph extends React.Component {
 
     const nodeCircle = nodeGroup.append('circle')
       .attr('id', d => `graph-node-${d.id}`)
-      .attr('class', d => `graph-node ${d.kind}`)
+      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`})
       .attr('r', this.nodeCircleRadius);
 
     nodeCircle.append('title')
@@ -337,7 +377,7 @@ export class Graph extends React.Component {
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line')
-      .attr('class', 'link');
+      .attr('class', d => {return d.fault ? 'link fault' : 'link'});
 
     nodeGroup
       .on('mouseover', d => this.nodeMouseOver(d3.select(`#node-group-${d.id}`), d))
