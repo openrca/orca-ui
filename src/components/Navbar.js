@@ -44,7 +44,7 @@ export class NavbarComponent extends React.Component {
             <Nav.Link href="/graph">Graph</Nav.Link>
             <Nav.Link href="/alerts">
                 Alerts
-                <Badge className="alertBadge" variant="danger">{this.state.alertCount ? this.state.alertCount : null}</Badge>
+                <Badge className="alertBadge" variant="danger" pill>{this.state.alertCount ? this.state.alertCount : null}</Badge>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
