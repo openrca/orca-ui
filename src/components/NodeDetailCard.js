@@ -60,17 +60,29 @@ export class NodeDetailCard extends React.Component {
   render() {
     const columns = [{
       dataField: 'attribute',
-      text: 'attribute'
+      text: 'attribute',
+      headerAttrs: {
+        hidden: true
+      }
     }, {
       dataField: 'value',
-      text: 'value'
+      text: 'value',
+      headerAttrs: {
+        hidden: true
+      }
     }];
     const columnsStats = [{
       dataField: 'type',
-      text: 'type'
+      text: 'type',
+      headerAttrs: {
+        hidden: true
+      }
     }, {
       dataField: 'count',
-      text: 'count'
+      text: 'count',
+      headerAttrs: {
+        hidden: true
+      }
     }];
     return (
       <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
