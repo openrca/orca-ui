@@ -11,7 +11,7 @@ http {
     server {
         access_log /dev/stdout;
 
-        listen 80;
+        listen ${LISTEN_PORT};
 
         root  /usr/share/nginx/html;
         include /etc/nginx/mime.types;
