@@ -303,6 +303,7 @@ export class Graph extends React.Component {
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
 
     const alerts = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').map(alert => alert.id);
+    const faultNodes = [];
 
     links.forEach(link => {
       if(alerts.includes(link.source) || alerts.includes(link.target)) {
@@ -315,13 +316,15 @@ export class Graph extends React.Component {
               const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) 
               || (faultLink.source === object && faultLink.target === neigh))[0];
               faultLink.fault = true;
+              if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
+              if(!faultNodes.includes(faultLink.target)) faultNodes.push(faultLink.target);
             }
           })
           return true;
         })
       }      
       return true;
-    })
+    });
     
     links = links.map(d => Object.assign({}, d));
 
@@ -334,7 +337,7 @@ export class Graph extends React.Component {
 
     const nodeCircle = nodeGroup.append('circle')
       .attr('id', d => `graph-node-${d.id}`)
-      .attr('class', d => `graph-node ${d.kind}`)
+      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`})
       .attr('r', this.nodeCircleRadius);
 
     nodeCircle.append('title')
