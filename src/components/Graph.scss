@@ -13,6 +13,10 @@ line.link {
     stroke-width: 1;
 }
 
+line.fault {
+    stroke: $accent-color-red;     
+}
+
 @each $node-class,
 $node-fill in $node-class-fill-map {
     circle.#{$node-class} {
