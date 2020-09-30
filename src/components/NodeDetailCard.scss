@@ -20,12 +20,14 @@
 .card .card-title {
     text-align: center;
     color: $text-color-light;
+    font-size: 1.2rem;
 }
 
 .card .card-subtitle {
     text-align: center;
     color: $text-color-light;
     text-transform: capitalize;
+    font-size: 1rem;
 }
 
 .card .node-info-text table{
