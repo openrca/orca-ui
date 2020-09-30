@@ -1,9 +1,49 @@
 @import "_variables.scss";
 
-.interface-visibility-controls-containe {
-    @extend .navbar-element;
+.interface-visibility-controls-container {
+  @extend .navbar-element;
+  padding-top: 0.4rem;
 }
 
-.custom-control-label.text {
-    color: $foreground-color-primary;
+.custom-control-text {
+  color       : $foreground-color-secondary;
+}
+
+@mixin switch($res: 'sm') {
+  $index  : 1rem;
+  $mainVal: 1rem;
+
+  .custom-control-label {
+    padding-left  : 0;
+    padding-bottom: #{$mainVal};
+  }
+
+  .custom-control-label::before {
+    height       : $mainVal;
+    width        : calc(#{$index} + 0.75rem);
+    border-radius: $mainVal * 2;
+    background-color: $background-color-primary;
+  }
+
+  .custom-control-label::after {
+    width        : calc(#{$mainVal} - 4px);
+    height       : calc(#{$mainVal} - 4px);
+    border-radius: calc(#{$index} - (#{$mainVal} / 2));
+    border-color: $foreground-color-secondary;
+    background-color: $foreground-color-secondary;
+  }
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: $background-color-secondary;
+    border-color: $accent-color-orange;
+  }
+
+  .custom-control-input:checked~.custom-control-label::after {
+    transform: translateX(calc(#{$mainVal} - 0.25rem));
+    background-color: $accent-color-yellow;
+  }
+}
+
+.custom-switch.custom-switch-sm {
+  @include switch();
 }
