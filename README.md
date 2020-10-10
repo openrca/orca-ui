@@ -26,7 +26,18 @@ Run Docker container (specify correct IP and port of API container):
 docker run -it \
     --name orca-ui \
     -e "BACKEND_URL=http://172.17.0.2:5000" \
-    -p 80:80 \
+    -p 80:8080 \
+    openrca/orca-ui
+```
+
+To specify listen port `LISTEN_PORT` environment variable can be used:
+
+```sh
+docker run -it \
+    --name orca-ui \
+    --network=host \
+    -e "LISTEN_PORT=8555" \
+    -e "BACKEND_URL=http://127.0.0.1:5000" \
     openrca/orca-ui
 ```
 
