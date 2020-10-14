@@ -241,7 +241,7 @@ export class Graph extends React.Component {
       .call(this.zoom.transform, transform);
   }
 
-  filterAlertOtherNamespace(nodes, links) {
+  filterAlerts(nodes, links) {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
       links.forEach(link => {
@@ -292,10 +292,6 @@ export class Graph extends React.Component {
     var nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
-    //Filter alerts
-    const alertsOtherNamespace = this.filterAlertOtherNamespace(nodes, links);
-    nodes = nodes.filter(nodeGroup => !alertsOtherNamespace.includes(nodeGroup));
-
     //Filter nodes
     if(this.state.namespace !== '{}'){
       const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
@@ -314,9 +310,17 @@ export class Graph extends React.Component {
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
+    //Filter alerts
+    const alertsToHide = this.filterAlerts(nodes, links);
+    nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
+
+    nodesName = nodes.map(nodeGroup => nodeGroup.id);
+    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
+
     const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
     nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
 
+    //Fault trajectory
     const alerts = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').map(alert => alert.id);
     const faultNodes = [];
 
