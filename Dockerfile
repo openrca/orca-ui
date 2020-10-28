@@ -1,8 +1,9 @@
 FROM node:12 as builder
 WORKDIR /app
-COPY . ./
-RUN yarn
+COPY package.json yarn.lock ./
+RUN yarn --production --non-interactive
 ENV REACT_APP_BACKEND_HOST /api
+COPY . ./
 RUN yarn build
 
 FROM nginx:1.19.0-alpine
