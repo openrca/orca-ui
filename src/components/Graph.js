@@ -354,6 +354,13 @@ export class Graph extends React.Component {
         .attr('id', d => `node-group-${d.id}`))
       .call(this.drag(this.state.simulation));
 
+    //Removing old
+    const circles = nodeGroup.selectAll('circle');
+    circles.remove();
+
+    const text = nodeGroup.selectAll('text');
+    text.remove();
+
     const nodeCircle = nodeGroup.append('circle')
       .attr('id', d => `graph-node-${d.id}`)
       .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`})
