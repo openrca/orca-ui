@@ -2,9 +2,11 @@ FROM node:12
 
 WORKDIR /app
 
-COPY . ./
+COPY package.json yarn.lock ./
 
-RUN yarn
+RUN yarn --non-interactive
+
+COPY . ./
 
 EXPOSE 3000
 
