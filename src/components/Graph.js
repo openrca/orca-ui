@@ -132,19 +132,32 @@ export class Graph extends React.Component {
 
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
+    nodeGroup.raise();
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .classed('mouse-over', true)
       .attr('y', this.nodeCircleRadius * 2 * multiplier)
       .text((d) => d.properties.name);
+
+    nodeGroup.append('text')
+      .attr('class', (d) => `node-label-background ${d.kind}`)
+      .classed('hidden', !this.state.showLabels)
+      .attr('text-anchor','middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .attr('y', this.nodeCircleRadius * 2 * multiplier)
+      .text((d) => d.properties.name).lower();
   }
 
   nodeMouseOut(nodeGroup) {
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
+      .classed('mouse-over', false)
       .attr('y', this.nodeCircleRadius * 2)
       .text((d) => truncate(d.properties.name, this.nodeLabelLength));
+    nodeGroup.selectAll('.node-label-background').remove();
   }
 
   nodeClick(nodeGroup, nodeData) {
@@ -332,7 +345,7 @@ export class Graph extends React.Component {
           const neighNeighs = this.getNeighbours(links, neigh);
           neighNeighs.forEach(neigh2 => {
             if(alerts.includes(neigh2)) {
-              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) 
+              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object)
               || (faultLink.source === object && faultLink.target === neigh))[0];
               faultLink.fault = true;
               if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
@@ -341,10 +354,10 @@ export class Graph extends React.Component {
           })
           return true;
         })
-      }      
+      }
       return true;
     });
-    
+
     links = links.map(d => Object.assign({}, d));
 
     const nodeGroup = this.state.nodeGroup
@@ -377,7 +390,7 @@ export class Graph extends React.Component {
       .text((d) => IconMap[d.kind]);
 
     const nodeLabel = nodeGroup.append('text')
-      .attr('class', 'node-label')
+      .attr('class', (d) => `node-label ${d.kind}`)
       .classed('hidden', !this.state.showLabels)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
@@ -479,7 +492,7 @@ export class Graph extends React.Component {
         <NodeDetailCard ref={this.nodeDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
-          handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels} 
+          handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels}
           defaultKinds={this.state.kinds ? this.state.kinds.map(kind => {
             return {
               label: kind,
