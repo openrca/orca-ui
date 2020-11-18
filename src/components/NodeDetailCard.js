@@ -1,5 +1,6 @@
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
+import JSONViewer from 'react-json-viewer';
 
 import './NodeDetailCard.scss';
 import './Table.scss';
@@ -25,14 +26,17 @@ export class NodeDetailCard extends React.Component {
   updateNodeData(nodeData, statistics = false) {
     let displayProperties = nodeData.properties;
     if(!statistics) {
-      displayProperties = Object.keys(nodeData.properties).reduce((object, key) => {
+      displayProperties = Object.keys(nodeData.properties).reduce((list, key) => {
+        const object = {}
         if(key !== 'name'){
           object['attribute'] = key;
           object['value'] = nodeData.properties[key];
+          list.push(object)
         }
-  
-        return object;
-      }, {});
+        
+
+        return list;
+      }, []);
       displayProperties = [displayProperties];
     } else {
       displayProperties = nodeData.properties.map((object) => {
@@ -93,8 +97,7 @@ export class NodeDetailCard extends React.Component {
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            <BootstrapTable keyField='id' data={this.state.displayProperties} columns={this.state.statistics ? columnsStats : columns} 
-              classes="table-dark" bootstrap4 striped hover/>
+            <JSONViewer json={this.state.displayProperties} />
           </div>
         </div>
       </div>
