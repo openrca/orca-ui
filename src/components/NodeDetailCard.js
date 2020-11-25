@@ -1,6 +1,6 @@
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import JSONViewer from 'react-json-viewer';
+import ReactJson from 'react-json-view';
 
 import './NodeDetailCard.scss';
 import './Table.scss';
@@ -25,8 +25,9 @@ export class NodeDetailCard extends React.Component {
 
   updateNodeData(nodeData, statistics = false) {
     let displayProperties = nodeData.properties;
+    console.log(displayProperties)
     if(!statistics) {
-      displayProperties = Object.keys(nodeData.properties).reduce((list, key) => {
+      /*displayProperties = Object.keys(nodeData.properties).reduce((list, key) => {
         const object = {}
         if(key !== 'name'){
           object['attribute'] = key;
@@ -37,13 +38,13 @@ export class NodeDetailCard extends React.Component {
 
         return list;
       }, []);
-      displayProperties = [displayProperties];
+      displayProperties = [displayProperties];*/
     } else {
-      displayProperties = nodeData.properties.map((object) => {
+      /*displayProperties = nodeData.properties.map((object) => {
         object['attribute'] = object.type;
         object['value'] = object.count;
         return object;
-      });
+      });*/
     }
     
     this.setState({ 
@@ -97,7 +98,7 @@ export class NodeDetailCard extends React.Component {
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            <JSONViewer json={this.state.displayProperties} />
+            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} collapsedStringAfterLenght={20}/>
           </div>
         </div>
       </div>
