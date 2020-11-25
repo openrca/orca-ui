@@ -16,41 +16,18 @@ export class NodeDetailCard extends React.Component {
         }
       },
       hidden: true,
-      displayProperties: [],
-      statistics: false
+      displayProperties: []
     };
 
     this.hide = this.hide.bind(this);
   }
 
-  updateNodeData(nodeData, statistics = false) {
+  updateNodeData(nodeData) {
     let displayProperties = nodeData.properties;
-    console.log(displayProperties)
-    if(!statistics) {
-      /*displayProperties = Object.keys(nodeData.properties).reduce((list, key) => {
-        const object = {}
-        if(key !== 'name'){
-          object['attribute'] = key;
-          object['value'] = nodeData.properties[key];
-          list.push(object)
-        }
-        
 
-        return list;
-      }, []);
-      displayProperties = [displayProperties];*/
-    } else {
-      /*displayProperties = nodeData.properties.map((object) => {
-        object['attribute'] = object.type;
-        object['value'] = object.count;
-        return object;
-      });*/
-    }
-    
     this.setState({ 
       nodeData: nodeData,
-      displayProperties: displayProperties,
-      statistics: statistics
+      displayProperties: displayProperties
     });
   }
 
@@ -98,7 +75,7 @@ export class NodeDetailCard extends React.Component {
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} collapsedStringAfterLenght={20}/>
+            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} />
           </div>
         </div>
       </div>

@@ -452,16 +452,8 @@ export class Graph extends React.Component {
       return stat;
     }, stat);
 
-    const statList = [];
-    Object.keys(stat).forEach(key => {
-      statList.push({
-        type: key,
-        count: stat[key]
-      });
-    });
-
     this.setState({
-      stat: statList
+      stat: stat
     });
   }
 
@@ -470,7 +462,7 @@ export class Graph extends React.Component {
     this.nodeDetailCard.current.updateNodeData({
       kind: 'Statistics',
       properties: this.state.stat
-    }, true);
+    });
     this.nodeDetailCard.current.show();
   }
 
