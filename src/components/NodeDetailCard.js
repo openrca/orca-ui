@@ -1,5 +1,4 @@
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
 import ReactJson from 'react-json-view';
 
 import './NodeDetailCard.scss';
@@ -40,32 +39,6 @@ export class NodeDetailCard extends React.Component {
   }
 
   render() {
-    const columns = [{
-      dataField: 'attribute',
-      text: 'attribute',
-      headerAttrs: {
-        hidden: true
-      }
-    }, {
-      dataField: 'value',
-      text: 'value',
-      headerAttrs: {
-        hidden: true
-      }
-    }];
-    const columnsStats = [{
-      dataField: 'type',
-      text: 'type',
-      headerAttrs: {
-        hidden: true
-      }
-    }, {
-      dataField: 'count',
-      text: 'count',
-      headerAttrs: {
-        hidden: true
-      }
-    }];
     return (
       <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
         <button type="button" className="close mt-1 mr-2 mb-0" aria-label="Close" onClick={this.hide}>
