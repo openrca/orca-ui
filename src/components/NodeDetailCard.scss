@@ -3,6 +3,7 @@
 
 .card.node-info-card {
     width     : 23rem;
+    max-height: 80vh;
     z-index   : 1030;
     position  : relative;
     opacity   : 0.9;
@@ -11,6 +12,12 @@
     float: left;
     background: $background-color-secondary;
     color: $text-color-light;
+}
+
+.react-bootstrap-table {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .card.node-info-card:hover {
