@@ -288,7 +288,7 @@ export class Graph extends React.Component {
       }
 
       return true;
-    })
+    });
     return neighbours;
   }
 
@@ -345,15 +345,15 @@ export class Graph extends React.Component {
           const neighNeighs = this.getNeighbours(links, neigh);
           neighNeighs.forEach(neigh2 => {
             if(alerts.includes(neigh2)) {
-              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object)
-              || (faultLink.source === object && faultLink.target === neigh))[0];
+              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) ||
+              (faultLink.source === object && faultLink.target === neigh))[0];
               faultLink.fault = true;
               if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
               if(!faultNodes.includes(faultLink.target)) faultNodes.push(faultLink.target);
             }
-          })
+          });
           return true;
-        })
+        });
       }
       return true;
     });
@@ -376,7 +376,7 @@ export class Graph extends React.Component {
 
     const nodeCircle = nodeGroup.append('circle')
       .attr('id', d => `graph-node-${d.id}`)
-      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`})
+      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`;})
       .attr('r', this.nodeCircleRadius);
 
     nodeCircle.append('title')
@@ -401,7 +401,7 @@ export class Graph extends React.Component {
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line')
-      .attr('class', d => {return d.fault ? 'link fault' : 'link'});
+      .attr('class', d => {return d.fault ? 'link fault' : 'link';});
 
     nodeGroup
       .on('mouseover', d => this.nodeMouseOver(d3.select(`#node-group-${d.id}`), d))
@@ -499,7 +499,7 @@ export class Graph extends React.Component {
             return {
               label: kind,
               value: kind
-            }
+            };
           }) : null}/>
       </div>
     );
