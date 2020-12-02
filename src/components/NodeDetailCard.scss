@@ -15,9 +15,14 @@
 }
 
 .react-json-view {
+    margin-top: 10px;
     max-height: 70vh;
     overflow-y: auto;
     overflow-x: auto;
+}
+
+.object-key {
+    font-weight: 900;
 }
 
 .card.node-info-card:hover {

@@ -48,7 +48,7 @@ export class NodeDetailCard extends React.Component {
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
           <div className="card-text node-info-text">
-            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} />
+            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} displayDataTypes={false}/>
           </div>
         </div>
       </div>
