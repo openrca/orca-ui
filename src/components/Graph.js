@@ -30,6 +30,13 @@ export class Graph extends React.Component {
       nodeCircle: null,
       nodeIcon: null,
       nodeGroup: null,
+      nodeData: {
+        kind: '',
+        properties: {
+          name: ''
+        }
+      },
+      showDetailCard: false,
       simulation: null,
       namespaceOptions: [],
       objectKindOptions: [],
@@ -54,7 +61,7 @@ export class Graph extends React.Component {
     this.nodeIconFontSize = 16;
     this.nodeLabelFontSize = 16;
     this.nodeLabelLength = 18;
-    this.nodeDetailCard = React.createRef();
+    this.hideDetailCard = this.hideDetailCard.bind(this);
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
     this.handleStatButton = this.handleStatButton.bind(this);
@@ -94,6 +101,10 @@ export class Graph extends React.Component {
     }, () => {
       this.generateGraph(this.state.data);
     });
+  }
+
+  hideDetailCard() {
+    this.setState({ showDetailCard: false });
   }
 
   loadData(timestamp = null) {
@@ -150,8 +161,10 @@ export class Graph extends React.Component {
   nodeClick(nodeGroup, nodeData) {
     this.clearClicked();
     nodeGroup.classed('clicked', true);
-    this.nodeDetailCard.current.updateNodeData(nodeData);
-    this.nodeDetailCard.current.show();
+    this.setState({
+      nodeData: nodeData,
+      showDetailCard: true
+    });
   }
 
   prepareSvg() {
@@ -332,7 +345,7 @@ export class Graph extends React.Component {
           const neighNeighs = this.getNeighbours(links, neigh);
           neighNeighs.forEach(neigh2 => {
             if(alerts.includes(neigh2)) {
-              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) 
+              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object)
               || (faultLink.source === object && faultLink.target === neigh))[0];
               faultLink.fault = true;
               if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
@@ -341,10 +354,10 @@ export class Graph extends React.Component {
           })
           return true;
         })
-      }      
+      }
       return true;
     });
-    
+
     links = links.map(d => Object.assign({}, d));
 
     const nodeGroup = this.state.nodeGroup
@@ -459,11 +472,13 @@ export class Graph extends React.Component {
 
   handleStatButton() {
     this.clearClicked();
-    this.nodeDetailCard.current.updateNodeData({
-      kind: 'Statistics',
-      properties: this.state.stat
+    this.setState({
+      nodeData: {
+        kind: 'Statistics',
+        properties: this.state.stat
+      },
+      showDetailCard: true
     });
-    this.nodeDetailCard.current.show();
   }
 
   render() {
@@ -476,10 +491,10 @@ export class Graph extends React.Component {
           Stats
         </Button>
         <div id="chart-area" />
-        <NodeDetailCard ref={this.nodeDetailCard} />
+        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} stat={this.state.stat} hideDetailCard={this.hideDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
-          handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels} 
+          handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels}
           defaultKinds={this.state.kinds ? this.state.kinds.map(kind => {
             return {
               label: kind,
