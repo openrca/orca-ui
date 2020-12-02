@@ -37,6 +37,7 @@ export class Graph extends React.Component {
         }
       },
       showDetailCard: false,
+      displayStats: false,
       simulation: null,
       namespaceOptions: [],
       objectKindOptions: [],
@@ -163,7 +164,8 @@ export class Graph extends React.Component {
     nodeGroup.classed('clicked', true);
     this.setState({
       nodeData: nodeData,
-      showDetailCard: true
+      showDetailCard: true,
+      displayStats: false
     });
   }
 
@@ -468,6 +470,15 @@ export class Graph extends React.Component {
     this.setState({
       stat: stat
     });
+
+    if (this.state.displayStats) {
+      this.setState({
+        nodeData: {
+          kind: 'Statistics',
+          properties: stat
+        }
+      });
+    }
   }
 
   handleStatButton() {
@@ -477,7 +488,8 @@ export class Graph extends React.Component {
         kind: 'Statistics',
         properties: this.state.stat
       },
-      showDetailCard: true
+      showDetailCard: true,
+      displayStats: true
     });
   }
 
