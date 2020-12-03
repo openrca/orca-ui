@@ -40,16 +40,17 @@ $node-fill in $node-class-fill-map {
         stroke: lighten($node-fill, 50%);
         fill  : darken($node-fill, 10%);
     }
+}
 
-    rect.node-label-background.#{$node-class} {
-        fill        : lighten($node-fill, 30%);
-        stroke      : darken($node-fill, 30%);
-        stroke-width: 0.1rem;
-    }
+rect.node-label-background {
+    fill        : $foreground-color-secondary;
+    fill-opacity : 0.8;
+    stroke      : $background-color-primary;
+    stroke-width: 1;
+}
 
-    text.node-label.mouse-over.#{$node-class} {
-        fill: darken($node-fill, 30%);
-    }
+text.node-label.mouse-over {
+    fill: $background-color-primary;
 }
 
 text.node-icon.alert {

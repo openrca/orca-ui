@@ -148,8 +148,8 @@ export class Graph extends React.Component {
       .classed('hidden', !this.state.showLabels)
       .attr('x', labelBBox.x - 4)
       .attr('y', labelBBox.y)
-      .attr('rx', 5)
-      .attr('ry', 5)
+      .attr('rx', 3)
+      .attr('ry', 3)
       .attr('width', labelBBox.width + 8)
       .attr('height', labelBBox.height)
       .lower();
