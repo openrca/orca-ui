@@ -41,10 +41,10 @@ $node-fill in $node-class-fill-map {
         fill  : darken($node-fill, 10%);
     }
 
-    text.node-label-background.#{$node-class} {
+    rect.node-label-background.#{$node-class} {
         fill        : lighten($node-fill, 30%);
-        stroke      : lighten($node-fill, 30%);
-        stroke-width: 0.2rem;
+        stroke      : darken($node-fill, 30%);
+        stroke-width: 0.1rem;
     }
 
     text.node-label.mouse-over.#{$node-class} {

@@ -140,14 +140,19 @@ export class Graph extends React.Component {
       .attr('y', this.nodeCircleRadius * 2 * multiplier)
       .text((d) => d.properties.name);
 
-    nodeGroup.append('text')
+
+    const labelBBox = nodeGroup.select('.node-label').node().getBBox();
+
+    nodeGroup.append('rect')
       .attr('class', (d) => `node-label-background ${d.kind}`)
       .classed('hidden', !this.state.showLabels)
-      .attr('text-anchor','middle')
-      .attr('dominant-baseline', 'middle')
-      .attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
-      .attr('y', this.nodeCircleRadius * 2 * multiplier)
-      .text((d) => d.properties.name).lower();
+      .attr('x', labelBBox.x - 4)
+      .attr('y', labelBBox.y)
+      .attr('rx', 5)
+      .attr('ry', 5)
+      .attr('width', labelBBox.width + 8)
+      .attr('height', labelBBox.height)
+      .lower();
   }
 
   nodeMouseOut(nodeGroup) {
