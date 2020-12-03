@@ -44,9 +44,7 @@ $node-fill in $node-class-fill-map {
 
 rect.node-label-background {
     fill        : $foreground-color-secondary;
-    fill-opacity : 0.8;
-    stroke      : $background-color-primary;
-    stroke-width: 1;
+    fill-opacity : 0.9;
 }
 
 text.node-label.mouse-over {
