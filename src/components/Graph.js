@@ -417,7 +417,7 @@ export class Graph extends React.Component {
       nodeCircle: nodeCircle,
       nodeIcon: nodeIcon,
       nodeGroup: nodeGroup,
-      showLabels: !nodeLabel.classed('hidden'),
+      showLabels: nodeLabel._groups[0].length > 0 ? !nodeLabel.classed('hidden') : null,
       link: link
     }, () => {
       this.state.simulation.nodes(nodes);
