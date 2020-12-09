@@ -259,6 +259,26 @@ export class Graph extends React.Component {
       .call(this.zoom.transform, transform);
   }
 
+  updateAlertNodesNamespace(nodes, links) {
+    nodes.forEach((node, index) => {
+      if(node.kind === 'alert') {
+        var namespace = '';
+        links.forEach(link => {
+          if(link.source === node.id || link.target === node.id){
+            const objectId = link.source === node.id ? link.target : link.source;
+            nodes.forEach(node => {
+              if(node.id === objectId) namespace = node.properties.namespace;
+            });
+          }
+        });
+        node.properties.namespace = namespace;
+        nodes[index] = node;
+      }
+    });
+
+    return nodes;
+  }
+
   filterAlerts(nodes, links) {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
@@ -293,7 +313,7 @@ export class Graph extends React.Component {
       }
 
       return true;
-    })
+    });
     return neighbours;
   }
 
@@ -301,10 +321,12 @@ export class Graph extends React.Component {
     var links = data.links;
     var nodes = d3.values(data.nodes);
 
+    nodes = this.updateAlertNodesNamespace(nodes, links);
+
     //Filter by namespace
     if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' ||
-        nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'cluster' ||
+       nodeGroup.kind === 'node');
     }
 
     var nodesName = nodes.map(nodeGroup => nodeGroup.id);
@@ -328,10 +350,6 @@ export class Graph extends React.Component {
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
-    //Filter alerts
-    const alertsToHide = this.filterAlerts(nodes, links);
-    nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
-
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
@@ -350,15 +368,15 @@ export class Graph extends React.Component {
           const neighNeighs = this.getNeighbours(links, neigh);
           neighNeighs.forEach(neigh2 => {
             if(alerts.includes(neigh2)) {
-              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object)
-              || (faultLink.source === object && faultLink.target === neigh))[0];
+              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) ||
+              (faultLink.source === object && faultLink.target === neigh))[0];
               faultLink.fault = true;
               if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
               if(!faultNodes.includes(faultLink.target)) faultNodes.push(faultLink.target);
             }
-          })
+          });
           return true;
-        })
+        });
       }
       return true;
     });
@@ -381,7 +399,7 @@ export class Graph extends React.Component {
 
     const nodeCircle = nodeGroup.append('circle')
       .attr('id', d => `graph-node-${d.id}`)
-      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`})
+      .attr('class', d => { return faultNodes.includes(d.id) ? `graph-node ${d.kind} fault` : `graph-node ${d.kind}`;})
       .attr('r', this.nodeCircleRadius);
 
     nodeCircle.append('title')
@@ -406,7 +424,7 @@ export class Graph extends React.Component {
     const link = this.state.link
       .data(links, d => [d.source, d.target])
       .join('line')
-      .attr('class', d => {return d.fault ? 'link fault' : 'link'});
+      .attr('class', d => {return d.fault ? 'link fault' : 'link';});
 
     nodeGroup
       .on('mouseover', d => this.nodeMouseOver(d3.select(`#node-group-${d.id}`), d))
@@ -502,7 +520,7 @@ export class Graph extends React.Component {
             return {
               label: kind,
               value: kind
-            }
+            };
           }) : null}/>
       </div>
     );
