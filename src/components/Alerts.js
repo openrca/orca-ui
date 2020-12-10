@@ -63,7 +63,7 @@ export class Alerts extends React.Component {
   originFormatter(cell) {
     return (
       <span> {cell.charAt(0).toUpperCase() + cell.slice(1)} </span>
-    )
+    );
   }
 
   severitySortFunc(a, b, order, dataFiled) {
