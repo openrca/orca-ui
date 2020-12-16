@@ -144,19 +144,37 @@ export class Graph extends React.Component {
 
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
+    nodeGroup.raise();
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .classed('mouse-over', true)
       .attr('y', this.nodeCircleRadius * 2 * multiplier)
       .text((d) => d.properties.name);
+
+
+    const labelBBox = nodeGroup.select('.node-label').node().getBBox();
+
+    nodeGroup.append('rect')
+      .attr('class', (d) => `node-label-background ${d.kind}`)
+      .classed('hidden', !this.state.showLabels)
+      .attr('x', labelBBox.x - 4)
+      .attr('y', labelBBox.y)
+      .attr('rx', 3)
+      .attr('ry', 3)
+      .attr('width', labelBBox.width + 8)
+      .attr('height', labelBBox.height)
+      .lower();
   }
 
   nodeMouseOut(nodeGroup) {
     nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
     nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
     nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
+      .classed('mouse-over', false)
       .attr('y', this.nodeCircleRadius * 2)
       .text((d) => truncate(d.properties.name, this.nodeLabelLength));
+    nodeGroup.selectAll('.node-label-background').remove();
   }
 
   nodeClick(nodeGroup, nodeData) {
@@ -392,7 +410,7 @@ export class Graph extends React.Component {
       .text((d) => IconMap[d.kind]);
 
     const nodeLabel = nodeGroup.append('text')
-      .attr('class', 'node-label')
+      .attr('class', (d) => `node-label ${d.kind}`)
       .classed('hidden', !this.state.showLabels)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
@@ -414,7 +432,7 @@ export class Graph extends React.Component {
       nodeCircle: nodeCircle,
       nodeIcon: nodeIcon,
       nodeGroup: nodeGroup,
-      showLabels: !nodeLabel.classed('hidden'),
+      showLabels: nodeLabel._groups[0].length > 0 ? !nodeLabel.classed('hidden') : null,
       link: link
     }, () => {
       this.state.simulation.nodes(nodes);

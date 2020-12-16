@@ -18,6 +18,10 @@ line.fault {
     stroke-width: 2;
 }
 
+text.node-label.mouse-over {
+    fill: $background-color-primary;
+}
+
 @each $node-class,
 $node-fill in $node-class-fill-map {
     circle.#{$node-class} {
@@ -38,6 +42,15 @@ $node-fill in $node-class-fill-map {
     }
 }
 
+rect.node-label-background {
+    fill        : $foreground-color-secondary;
+    fill-opacity : 0.9;
+}
+
+text.node-label.mouse-over {
+    fill: $background-color-primary;
+}
+
 text.node-icon.alert {
     animation: blink 0.8s infinite;
 }
@@ -46,6 +59,8 @@ text.node-label {
     fill: $foreground-color-secondary;
     cursor: pointer;
 }
+
+
 
 g.node-group.clicked {
     filter: brightness(130%);
