@@ -101,7 +101,7 @@ export class Graph extends React.Component {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph' + param)
       .then((response) => {
         const namespaces = [...new Set(response.data.nodes.map(nodeGroup => {
-          return nodeGroup.properties && nodeGroup.properties.namespace? nodeGroup.properties.namespace : null
+          return nodeGroup.properties && nodeGroup.properties.namespace? nodeGroup.properties.namespace : null;
         }))].filter(namespace => namespace != null);
         const namespaceOptions = namespaces.map(namespace => ({
           value: namespace,
