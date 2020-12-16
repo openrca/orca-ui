@@ -2,7 +2,6 @@ import React from 'react';
 import ReactJson from 'react-json-view';
 
 import './NodeDetailCard.scss';
-import './Table.scss';
 
 export class NodeDetailCard extends React.Component {
   constructor(props) {
