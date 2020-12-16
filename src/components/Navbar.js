@@ -10,7 +10,7 @@ export class NavbarComponent extends React.Component {
     super(props);
     this.state = {
       alertCount: null
-    }
+    };
     this.alertCountInterval = this.alertCountInterval.bind(this);
   }
 
@@ -23,7 +23,7 @@ export class NavbarComponent extends React.Component {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/alerts')
       .then((response) => {
         this.setState({
-          alertCount: response.data.length,
+          alertCount: response.data.length
         });
       })
       .catch((err) => {
@@ -44,7 +44,7 @@ export class NavbarComponent extends React.Component {
             <Nav.Link href="/graph">Graph</Nav.Link>
             <Nav.Link href="/alerts">
                 Alerts
-                <Badge className="alertBadge" variant="danger" pill>{this.state.alertCount ? this.state.alertCount : null}</Badge>
+              <Badge className="alertBadge" variant="danger" pill>{this.state.alertCount ? this.state.alertCount : null}</Badge>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
