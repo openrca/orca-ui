@@ -30,6 +30,14 @@ export class Graph extends React.Component {
       nodeCircle: null,
       nodeIcon: null,
       nodeGroup: null,
+      nodeData: {
+        kind: '',
+        properties: {
+          name: ''
+        }
+      },
+      showDetailCard: false,
+      displayStats: false,
       simulation: null,
       namespaceOptions: [],
       objectKindOptions: [],
@@ -54,7 +62,7 @@ export class Graph extends React.Component {
     this.nodeIconFontSize = 16;
     this.nodeLabelFontSize = 16;
     this.nodeLabelLength = 18;
-    this.nodeDetailCard = React.createRef();
+    this.hideDetailCard = this.hideDetailCard.bind(this);
     this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
     this.handleStatButton = this.handleStatButton.bind(this);
@@ -94,6 +102,10 @@ export class Graph extends React.Component {
     }, () => {
       this.generateGraph(this.state.data);
     });
+  }
+
+  hideDetailCard() {
+    this.setState({ showDetailCard: false });
   }
 
   loadData(timestamp = null) {
@@ -168,8 +180,11 @@ export class Graph extends React.Component {
   nodeClick(nodeGroup, nodeData) {
     this.clearClicked();
     nodeGroup.classed('clicked', true);
-    this.nodeDetailCard.current.updateNodeData(nodeData);
-    this.nodeDetailCard.current.show();
+    this.setState({
+      nodeData: nodeData,
+      showDetailCard: true,
+      displayStats: false
+    });
   }
 
   prepareSvg() {
@@ -473,15 +488,27 @@ export class Graph extends React.Component {
     this.setState({
       stat: stat
     });
+
+    if (this.state.displayStats) {
+      this.setState({
+        nodeData: {
+          kind: 'Statistics',
+          properties: stat
+        }
+      });
+    }
   }
 
   handleStatButton() {
     this.clearClicked();
-    this.nodeDetailCard.current.updateNodeData({
-      kind: 'Statistics',
-      properties: this.state.stat
+    this.setState({
+      nodeData: {
+        kind: 'Statistics',
+        properties: this.state.stat
+      },
+      showDetailCard: true,
+      displayStats: true
     });
-    this.nodeDetailCard.current.show();
   }
 
   render() {
@@ -494,7 +521,7 @@ export class Graph extends React.Component {
           Stats
         </Button>
         <div id="chart-area" />
-        <NodeDetailCard ref={this.nodeDetailCard} />
+        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} stat={this.state.stat} hideDetailCard={this.hideDetailCard} />
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
           handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels}
