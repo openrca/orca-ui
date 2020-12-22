@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
+import * as d3 from 'd3';
 
 import './NodeDetailCard.scss';
 import './Table.scss';
@@ -15,23 +16,22 @@ export class NodeDetailCard extends React.Component {
         }
       },
       hidden: true,
-      displayProperties: []
+      displayProperties: [],
+      stat: {}
     };
-
-    this.hide = this.hide.bind(this);
   }
 
-  updateNodeData(nodeData) {
-    let displayProperties = nodeData.properties;
-
-    this.setState({ 
-      nodeData: nodeData,
-      displayProperties: displayProperties
+  componentDidUpdate(){
+    this.setState({
+      nodeData: this.props.nodeData,
+      displayProperties: this.props.nodeData.properties,
+      hidden: this.props.hidden,
+      stat: this.props.stat
     });
   }
 
-  hide() {
-    this.setState({ hidden: true });
+  shouldComponentUpdate(nextProps) {
+    return this.state.hidden !== nextProps.hidden || this.state.nodeData !== nextProps.nodeData || this.state.stat !== nextProps.stat;
   }
 
   show() {
@@ -41,7 +41,7 @@ export class NodeDetailCard extends React.Component {
   render() {
     return (
       <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
-        <button type="button" className="close mt-1 mr-2 mb-0" aria-label="Close" onClick={this.hide}>
+        <button type="button" className="close mt-1 mr-2 mb-0" aria-label="Close" onClick={this.props.hideDetailCard}>
           <span aria-hidden="true">&times;</span>
         </button>
         <div className="card-body mt-0 pt-0">
