@@ -112,7 +112,9 @@ export class Graph extends React.Component {
     const param = timestamp ? `?time_point=${timestamp}` : '';
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph' + param)
       .then((response) => {
-        const namespaces = [...new Set(response.data.nodes.map(nodeGroup => nodeGroup.properties ? nodeGroup.properties.namespace : null))];
+        const namespaces = [...new Set(response.data.nodes.map(nodeGroup => {
+          return nodeGroup.properties && nodeGroup.properties.namespace? nodeGroup.properties.namespace : null;
+        }))].filter(namespace => namespace != null);
         const namespaceOptions = namespaces.map(namespace => ({
           value: namespace,
           label: namespace
