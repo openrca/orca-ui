@@ -8,20 +8,8 @@ import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
 import { IconMap } from './IconMap';
 import './Graph.scss';
-
-function truncate(fullStr, strLen, separator='...') {
-  if (fullStr.length <= strLen) return fullStr;
-
-  const sepLen = separator.length,
-    charsToShow = strLen - sepLen,
-    frontChars = Math.ceil(charsToShow / 2),
-    backChars = Math.floor(charsToShow / 2);
-
-  return fullStr.substr(0, frontChars) +
-    separator +
-    fullStr.substr(fullStr.length - backChars);
-}
-
+import { truncate, clearClicked, scaleGraph, filterAlerts, filterK8sNodesOtherNamespace, 
+  getNeighbours, drag } from './GraphUtils.js';
 export class Graph extends React.Component {
   constructor(props) {
     super(props);
@@ -63,7 +51,6 @@ export class Graph extends React.Component {
     this.nodeLabelFontSize = 16;
     this.nodeLabelLength = 18;
     this.hideDetailCard = this.hideDetailCard.bind(this);
-    this.scaleGraph = this.scaleGraph.bind(this);
     this.graphLoad = this.graphLoad.bind(this);
     this.handleStatButton = this.handleStatButton.bind(this);
     this.toggleNodeLabels = this.toggleNodeLabels.bind(this);
@@ -140,10 +127,6 @@ export class Graph extends React.Component {
       });
   }
 
-  clearClicked() {
-    d3.selectAll('.clicked').classed('clicked', false);
-  }
-
   nodeMouseOver(nodeGroup) {
     const multiplier = 1.5;
     nodeGroup.raise();
@@ -180,7 +163,7 @@ export class Graph extends React.Component {
   }
 
   nodeClick(nodeGroup, nodeData) {
-    this.clearClicked();
+    clearClicked();
     nodeGroup.classed('clicked', true);
     this.setState({
       nodeData: nodeData,
@@ -246,72 +229,8 @@ export class Graph extends React.Component {
     }, () => {
       const div = document.getElementById('chart-area');
       div.style.visibility = 'visible';
-      this.scaleGraph();
+      scaleGraph(this.state.svg, this.state.g, this.zoom);
     });
-  }
-
-  scaleGraph() {
-    const svg = this.state.svg;
-    const g = this.state.g;
-
-    const width = svg.node().getBoundingClientRect().width;
-    const height = svg.node().getBoundingClientRect().height;
-
-    const graphX = g.node().getBBox().x;
-    const graphY = g.node().getBBox().y;
-    const graphWidth = g.node().getBBox().width;
-    const graphHeight = g.node().getBBox().height;
-
-    if(graphWidth === 0 || graphHeight === 0) return;
-
-    const scale = 0.95 / Math.max(graphWidth / width, graphHeight / height);
-
-    const transform = d3.zoomIdentity
-      .translate(width / 2 - scale * (graphX + graphWidth / 2), height / 2 - scale * (graphY + graphHeight / 2))
-      .scale(scale);
-
-    svg
-      .transition()
-      .duration(0)
-      .call(this.zoom.transform, transform);
-  }
-
-  filterAlerts(nodes, links) {
-    return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
-      var valid = false;
-      links.forEach(link => {
-        if(link.source === alert.id || link.target === alert.id) valid = true;
-      });
-      return !valid;
-    });
-  }
-
-  filterK8sNodesOtherNamespace(nodes, links) {
-    return nodes.filter(nodeGroup => nodeGroup.kind === 'node').filter(node => {
-      var valid = false;
-      const clusterNames = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster').map(cluster => cluster.id);
-      const linksWithoutClusters = links.filter(link => !(clusterNames.includes(link.source) || clusterNames.includes(link.target)));
-
-      linksWithoutClusters.forEach(link => {
-        if(link.source === node.id || link.target === node.id) valid = true;
-      });
-      return !valid;
-    });
-  }
-
-  getNeighbours(links, object) {
-    const objectLinks = links.filter(link => link.source === object || link.target === object);
-    const neighbours = [];
-    objectLinks.forEach(link => {
-      if(link.source === object) {
-        neighbours.push(link.target);
-      } else {
-        neighbours.push(link.source);
-      }
-
-      return true;
-    });
-    return neighbours;
   }
 
   generateGraph(data) {
@@ -329,7 +248,7 @@ export class Graph extends React.Component {
 
     //Filter nodes
     if(this.state.namespace !== '{}'){
-      const k8sNodesOtherNamespace = this.filterK8sNodesOtherNamespace(nodes, links);
+      const k8sNodesOtherNamespace = filterK8sNodesOtherNamespace(nodes, links);
       const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
       const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
 
@@ -346,7 +265,7 @@ export class Graph extends React.Component {
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
 
     //Filter alerts
-    const alertsToHide = this.filterAlerts(nodes, links);
+    const alertsToHide = filterAlerts(nodes, links);
     nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
 
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
@@ -362,9 +281,9 @@ export class Graph extends React.Component {
     links.forEach(link => {
       if(alerts.includes(link.source) || alerts.includes(link.target)) {
         const object = alerts.includes(link.source) ? link.target : link.source;
-        const objectNeighs = this.getNeighbours(links, object);
+        const objectNeighs = getNeighbours(links, object);
         objectNeighs.forEach(neigh => {
-          const neighNeighs = this.getNeighbours(links, neigh);
+          const neighNeighs = getNeighbours(links, neigh);
           neighNeighs.forEach(neigh2 => {
             if(alerts.includes(neigh2)) {
               const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) ||
@@ -387,7 +306,7 @@ export class Graph extends React.Component {
       .join(enter => enter.append('g')
         .attr('class', 'node-group')
         .attr('id', d => `node-group-${d.id}`))
-      .call(this.drag(this.state.simulation));
+      .call(drag(this.state.simulation));
 
     //Removing old
     const circles = nodeGroup.selectAll('circle');
@@ -455,30 +374,6 @@ export class Graph extends React.Component {
       .attr('transform', d => `translate(${d.x}, ${d.y})`);
   }
 
-  drag(simulation) {
-    function dragstarted(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
-
-    function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
-
-    return d3.drag()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended);
-  }
-
   calculateGraphStats(nodes) {
     const stat = {};
     stat.all = nodes.length;
@@ -502,7 +397,7 @@ export class Graph extends React.Component {
   }
 
   handleStatButton() {
-    this.clearClicked();
+    clearClicked();
     this.setState({
       nodeData: {
         kind: 'Statistics',
