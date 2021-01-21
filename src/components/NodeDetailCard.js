@@ -3,7 +3,6 @@ import ReactJson from 'react-json-view';
 import * as d3 from 'd3';
 
 import './NodeDetailCard.scss';
-import './Table.scss';
 
 export class NodeDetailCard extends React.Component {
   constructor(props) {
