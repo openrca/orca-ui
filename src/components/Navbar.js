@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './svg/logo.svg';
+import logo from 'assets/svg/logo.svg';
 import { Navbar, Nav, Badge } from 'react-bootstrap';
 import axios from 'axios';
 
