@@ -8,8 +8,7 @@ import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
 import { IconMap } from './IconMap';
 import './Graph.scss';
-import { truncate, clearClicked, scaleGraph, filterAlerts, filterK8sNodesOtherNamespace, 
-  getNeighbours, drag } from './GraphUtils.js';
+import { truncate, clearClicked, scaleGraph, drag, prepareGraphData } from './GraphUtils.js';
 export class Graph extends React.Component {
   constructor(props) {
     super(props);
@@ -234,72 +233,11 @@ export class Graph extends React.Component {
   }
 
   generateGraph(data) {
-    var links = data.links;
-    var nodes = d3.values(data.nodes);
-
-    //Filter by namespace
-    if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' ||
-        nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
-    }
-
-    var nodesName = nodes.map(nodeGroup => nodeGroup.id);
-    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
-
-    //Filter nodes
-    if(this.state.namespace !== '{}'){
-      const k8sNodesOtherNamespace = filterK8sNodesOtherNamespace(nodes, links);
-      const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
-      const k8sNodesOtherNamespaceLinks = links.filter(link => k8sNodesOtherNamespaceNames.includes(link.source) || k8sNodesOtherNamespaceNames.includes(link.target));
-
-      nodes = nodes.filter(nodeGroup => !k8sNodesOtherNamespace.includes(nodeGroup));
-      links = links.filter(linkGroup => !k8sNodesOtherNamespaceLinks.includes(linkGroup));
-    }
-
-    //Filter by type
-    if(this.state.kinds) {
-      nodes = nodes.filter(nodeGroup => this.state.kinds.includes(nodeGroup.kind));
-    }
-
-    nodesName = nodes.map(nodeGroup => nodeGroup.id);
-    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
-
-    //Filter alerts
-    const alertsToHide = filterAlerts(nodes, links);
-    nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
-
-    nodesName = nodes.map(nodeGroup => nodeGroup.id);
-    links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
-
-    const old = new Map(this.state.nodeGroup.data().map(d => [d.id, d]));
-    nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
-
-    //Fault trajectory
-    const alerts = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').map(alert => alert.id);
-    const faultNodes = [];
-
-    links.forEach(link => {
-      if(alerts.includes(link.source) || alerts.includes(link.target)) {
-        const object = alerts.includes(link.source) ? link.target : link.source;
-        const objectNeighs = getNeighbours(links, object);
-        objectNeighs.forEach(neigh => {
-          const neighNeighs = getNeighbours(links, neigh);
-          neighNeighs.forEach(neigh2 => {
-            if(alerts.includes(neigh2)) {
-              const faultLink = links.filter(faultLink => (faultLink.source === neigh && faultLink.target === object) ||
-              (faultLink.source === object && faultLink.target === neigh))[0];
-              faultLink.fault = true;
-              if(!faultNodes.includes(faultLink.source)) faultNodes.push(faultLink.source);
-              if(!faultNodes.includes(faultLink.target)) faultNodes.push(faultLink.target);
-            }
-          });
-          return true;
-        });
-      }
-      return true;
-    });
-
-    links = links.map(d => Object.assign({}, d));
+    const graphDataComponents = prepareGraphData(data, this.state.namespace, this.state.kinds, this.state.nodeGroup);
+    
+    const nodes = graphDataComponents[0];
+    const links = graphDataComponents[1];
+    const faultNodes = graphDataComponents[2];
 
     const nodeGroup = this.state.nodeGroup
       .data(nodes, d => d.id)
