@@ -95,6 +95,7 @@ export class Graph extends React.Component {
   }
 
   loadData(timestamp = null) {
+    d3.select('.refresh-icon').classed('rotating', true);
     const param = timestamp ? `?time_point=${timestamp}` : '';
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph' + param)
       .then((response) => {
@@ -120,6 +121,7 @@ export class Graph extends React.Component {
           if(!timestamp) setTimeout(this.graphLoad, 2000);
           this.generateGraph(response.data);
         });
+        d3.select('.refresh-icon').classed('rotating', false);
       })
       .catch((err) => {
         console.log(err);
