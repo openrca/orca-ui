@@ -278,6 +278,26 @@ export class Graph extends React.Component {
       .call(this.zoom.transform, transform);
   }
 
+  updateAlertNodesNamespace(nodes, links) {
+    nodes.forEach((node, index) => {
+      if(node.kind === 'alert') {
+        var namespace = '';
+        links.forEach(link => {
+          if(link.source === node.id || link.target === node.id){
+            const objectId = link.source === node.id ? link.target : link.source;
+            nodes.forEach(node => {
+              if(node.id === objectId) namespace = node.properties.namespace;
+            });
+          }
+        });
+        node.properties.namespace = namespace;
+        nodes[index] = node;
+      }
+    });
+
+    return nodes;
+  }
+
   filterAlerts(nodes, links) {
     return nodes.filter(nodeGroup => nodeGroup.kind === 'alert').filter(alert => {
       var valid = false;
@@ -320,10 +340,12 @@ export class Graph extends React.Component {
     var links = data.links;
     var nodes = d3.values(data.nodes);
 
+    nodes = this.updateAlertNodesNamespace(nodes, links);
+
     //Filter by namespace
     if (this.state.namespace) {
-      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'alert' ||
-        nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
+      nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === this.state.namespace || nodeGroup.kind === 'cluster' ||
+       nodeGroup.kind === 'node');
     }
 
     var nodesName = nodes.map(nodeGroup => nodeGroup.id);
@@ -346,10 +368,6 @@ export class Graph extends React.Component {
 
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
-
-    //Filter alerts
-    const alertsToHide = this.filterAlerts(nodes, links);
-    nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
 
     nodesName = nodes.map(nodeGroup => nodeGroup.id);
     links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
