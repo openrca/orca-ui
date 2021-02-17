@@ -8,7 +8,9 @@ import { DateTimePicker } from './DateTimePicker';
 import { NodeDetailCard } from './NodeDetailCard';
 import { IconMap } from './IconMap';
 import './Graph.scss';
-import { truncate, clearClicked, scaleGraph, drag, prepareGraphData } from './GraphUtils.js';
+import { getGraphData } from './GraphUtils';
+import { truncate } from './Utils';
+import * as visualization from './Visualization';
 export class Graph extends React.Component {
   constructor(props) {
     super(props);
@@ -164,7 +166,7 @@ export class Graph extends React.Component {
   }
 
   nodeClick(nodeGroup, nodeData) {
-    clearClicked();
+    visualization.clearClicked();
     nodeGroup.classed('clicked', true);
     this.setState({
       nodeData: nodeData,
@@ -230,23 +232,23 @@ export class Graph extends React.Component {
     }, () => {
       const div = document.getElementById('chart-area');
       div.style.visibility = 'visible';
-      scaleGraph(this.state.svg, this.state.g, this.zoom);
+      visualization.scaleGraph(this.state.svg, this.state.g, this.zoom);
     });
   }
 
   generateGraph(data) {
-    const graphDataComponents = prepareGraphData(data, this.state.namespace, this.state.kinds, this.state.nodeGroup);
+    const graphData = getGraphData(data, this.state.namespace, this.state.kinds, this.state.nodeGroup);
     
-    const nodes = graphDataComponents[0];
-    const links = graphDataComponents[1];
-    const faultNodes = graphDataComponents[2];
+    const nodes = graphData[0];
+    const links = graphData[1];
+    const faultNodes = graphData[2];
 
     const nodeGroup = this.state.nodeGroup
       .data(nodes, d => d.id)
       .join(enter => enter.append('g')
         .attr('class', 'node-group')
         .attr('id', d => `node-group-${d.id}`))
-      .call(drag(this.state.simulation));
+      .call(visualization.drag(this.state.simulation));
 
     //Removing old
     const circles = nodeGroup.selectAll('circle');
@@ -337,7 +339,7 @@ export class Graph extends React.Component {
   }
 
   handleStatButton() {
-    clearClicked();
+    visualization.clearClicked();
     this.setState({
       nodeData: {
         kind: 'Statistics',

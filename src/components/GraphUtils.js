@@ -1,47 +1,7 @@
 import * as d3 from 'd3';
 
-export function truncate(fullStr, strLen, separator='...') {
-  if (fullStr.length <= strLen) return fullStr;
-  
-  const sepLen = separator.length,
-    charsToShow = strLen - sepLen,
-    frontChars = Math.ceil(charsToShow / 2),
-    backChars = Math.floor(charsToShow / 2);
-  
-  return fullStr.substr(0, frontChars) +
-    separator +
-    fullStr.substr(fullStr.length - backChars);
-}
-
-export function clearClicked() {
-  d3.selectAll('.clicked').classed('clicked', false);
-}
-
-export function scaleGraph(svg, g, zoom) {
-  const width = svg.node().getBoundingClientRect().width;
-  const height = svg.node().getBoundingClientRect().height;
-
-  const graphX = g.node().getBBox().x;
-  const graphY = g.node().getBBox().y;
-  const graphWidth = g.node().getBBox().width;
-  const graphHeight = g.node().getBBox().height;
-
-  if(graphWidth === 0 || graphHeight === 0) return;
-
-  const scale = 0.95 / Math.max(graphWidth / width, graphHeight / height);
-
-  const transform = d3.zoomIdentity
-    .translate(width / 2 - scale * (graphX + graphWidth / 2), height / 2 - scale * (graphY + graphHeight / 2))
-    .scale(scale);
-
-  svg
-    .transition()
-    .duration(0)
-    .call(zoom.transform, transform);
-}
-
-export function filterByType(nodes, links, type) {
-  return nodes.filter(nodeGroup => nodeGroup.kind === type).filter(alert => {
+function filterByKind(nodes, links, kind) {
+  return nodes.filter(nodeGroup => nodeGroup.kind === kind).filter(alert => {
     var valid = false;
     links.forEach(link => {
       if(link.source === alert.id || link.target === alert.id) valid = true;
@@ -50,7 +10,7 @@ export function filterByType(nodes, links, type) {
   });
 }
 
-export function filterK8sNodesOtherNamespace(nodes, links) {
+function filterK8sNodesOtherNamespace(nodes, links) {
   return nodes.filter(nodeGroup => nodeGroup.kind === 'node').filter(node => {
     var valid = false;
     const clusterNames = nodes.filter(nodeGroup => nodeGroup.kind === 'cluster').map(cluster => cluster.id);
@@ -63,7 +23,7 @@ export function filterK8sNodesOtherNamespace(nodes, links) {
   });
 }
 
-export function getNeighbours(links, object) {
+function getNeighbours(links, object) {
   const objectLinks = links.filter(link => link.source === object || link.target === object);
   const neighbours = [];
   objectLinks.forEach(link => {
@@ -78,31 +38,7 @@ export function getNeighbours(links, object) {
   return neighbours;
 }
 
-export function drag(simulation) {
-  function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-  }
-
-  function dragended(d) {
-    if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
-  return d3.drag()
-    .on('start', dragstarted)
-    .on('drag', dragged)
-    .on('end', dragended);
-}
-
-export function filterByNamespace(nodes, namespace) {
+function filterByNamespace(nodes, namespace) {
   if(namespace) {
     nodes = nodes.filter(nodeGroup => nodeGroup.properties.namespace === namespace || nodeGroup.kind === 'alert' ||
       nodeGroup.kind === 'cluster' || nodeGroup.kind === 'node');
@@ -111,7 +47,7 @@ export function filterByNamespace(nodes, namespace) {
   return nodes;
 }
 
-export function filterNodes(nodes, links, namespace) {
+function filterNodes(nodes, links, namespace) {
   if(namespace !== '{}'){
     const k8sNodesOtherNamespace = filterK8sNodesOtherNamespace(nodes, links);
     const k8sNodesOtherNamespaceNames = k8sNodesOtherNamespace.map(node => node.id);
@@ -124,7 +60,7 @@ export function filterNodes(nodes, links, namespace) {
   return [nodes, links];
 }
 
-export function filterByTypes(nodes, kinds) {
+function filterByKinds(nodes, kinds) {
   if(kinds) {
     nodes = nodes.filter(nodeGroup => kinds.includes(nodeGroup.kind));
   }
@@ -132,19 +68,19 @@ export function filterByTypes(nodes, kinds) {
   return nodes;
 }
 
-export function filterByAlerts(nodes, links) {
-  const alertsToHide = filterByType(nodes, links, 'alert');
+function filterByAlerts(nodes, links) {
+  const alertsToHide = filterByKind(nodes, links, 'alert');
   nodes = nodes.filter(nodeGroup => !alertsToHide.includes(nodeGroup));
   return nodes;
 }
 
-export function actualizeLinks(nodes, links) {
+function getLinksBetweenNodes(nodes, links) {
   const nodesName = nodes.map(nodeGroup => nodeGroup.id);
   links = links.filter(link => nodesName.includes(link.source) && nodesName.includes(link.target));
   return links;
 }
 
-export function detectFaultTrajectory(nodes, links) {
+function detectFaultTrajectory(nodes, links) {
   const alerts = nodes.filter(nodeGroup => nodeGroup.kind === 'alert').map(alert => alert.id);
   const faultNodes = [];
 
@@ -174,22 +110,22 @@ export function detectFaultTrajectory(nodes, links) {
   return [faultNodes, links];
 }
 
-export function prepareGraphData(data, namespace, kinds, nodeGroup) {
+export function getGraphData(data, namespace, kinds, nodeGroup) {
   var links = data.links;
   var nodes = d3.values(data.nodes);
   
   nodes = filterByNamespace(nodes, namespace);
-  links = actualizeLinks(nodes, links);
+  links = getLinksBetweenNodes(nodes, links);
 
   const filteredNodesComponents = filterNodes(nodes, links, namespace);
   nodes = filteredNodesComponents[0];
   links = filteredNodesComponents[1];
 
-  nodes = filterByTypes(nodes, kinds);
-  links = actualizeLinks(nodes, links);
+  nodes = filterByKinds(nodes, kinds);
+  links = getLinksBetweenNodes(nodes, links);
 
   nodes = filterByAlerts(nodes, links);
-  links = actualizeLinks(nodes, links);
+  links = getLinksBetweenNodes(nodes, links);
 
   const old = new Map(nodeGroup.data().map(d => [d.id, d]));
   nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
