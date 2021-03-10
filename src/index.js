@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
-import { Navbar, Graph, Alerts } from './components';
+import { Navbar, Graph, Alerts, RCA } from './components';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/ui.css';
@@ -18,6 +18,7 @@ const router = (
         <Route exact path="/"> <Redirect to="/graph"/> </Route>
         <Route path="/graph" component={Graph} />
         <Route path="/alerts" component={Alerts} />
+        <Route path="/trajectory/:id" component={RCA} />
       </Router>
     </div>
   </div>
