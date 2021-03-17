@@ -21,14 +21,14 @@ export class RCA extends React.Component {
   }
 
   handleQueryParams() {
-    const params = queryString.parse(this.props.location.search)
+    const params = queryString.parse(this.props.location.search);
     
     this.setState({
       source: params.source,
       time_point: params.time_point
     }, () => {
       this.loadData();
-    })
+    });
   }
 
   loadData() {
