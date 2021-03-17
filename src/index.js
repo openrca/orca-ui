@@ -18,7 +18,7 @@ const router = (
         <Route exact path="/"> <Redirect to="/graph"/> </Route>
         <Route path="/graph" component={Graph} />
         <Route path="/alerts" component={Alerts} />
-        <Route path="/trajectory/:id" component={RCA} />
+        <Route path="/rca" component={RCA} />
       </Router>
     </div>
   </div>
