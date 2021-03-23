@@ -9,6 +9,7 @@
     "bootstrap": "^4.4.1",
     "d3": "^5.16.0",
     "node-sass": "^4.14.1",
+    "query-string": "^6.14.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-bootstrap-table-next": "^4.0.3",
