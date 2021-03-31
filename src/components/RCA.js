@@ -7,6 +7,7 @@ import { getGraphData } from './GraphUtils';
 import * as visualization from './Visualization';
 import { IconMap } from './IconMap';
 import { truncate } from './Utils';
+import './Graph.scss';
 
 export class RCA extends React.Component {
   constructor(props){
@@ -17,13 +18,22 @@ export class RCA extends React.Component {
       loading: true,
       rca: null,
       //Same format as in /v1/graph endpoint
-      graphData: null
+      nodeGroup: null
     };
 
     this.zoom = d3.zoom();
+
+    this.generateGraph = this.generateGraph.bind(this);
+    this.ticked = this.ticked.bind(this);
+    this.nodeCircleRadius = 16;
+    this.nodeIconFontSize = 16;
+    this.nodeLabelFontSize = 16;
+    this.nodeLabelLength = 18;
   }
 
   componentDidMount() {
+    const div = document.getElementById('chart-area');
+    div.style.visibility = 'hidden';
     this.handleQueryParams();
   }
 
@@ -40,56 +50,23 @@ export class RCA extends React.Component {
   }
 
   loadData() {
-    // axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/rca?source=' + this.state.source + '&time_point=' + this.state.time_point)
-    //   .then((response) => {
-    //     this.setState({
-    //       rca: response.data,
-    //       loading: false
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
-    this.setState({
-      loading: false,
-      rca: [
-            {
-                "nodes": [{
-                  "id": "1",
-                  "kind": "cluster",
-                  "origin": "kubernetes",
-                  "properties": {
-                      "name": "cluster"
-                  }
-                }, {"id": "2",
-                    "kind": "cluster",
-                    "origin": "kubernetes",
-                    "properties": {
-                        "name": "cluster"
-                    }
-                  }],
-                "links": [{        
-                  "id": "aeffcea5-01ee-5c90-a16a-6ba296e0f3f7",
-                  "source": "1",
-                  "target": "2"
-              }],
-                "score": 0.555
-            },
-            {
-                "nodes": [],
-                "links": [],
-                "score": 0.555
-            },
-            {
-                "nodes": [],
-                "links": [],
-                "score": 0.555
-            }
-        ]
-   }, () => {
-     this.generateGraph(this.state.rca[0]);
-   })
+    axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/rca?source=' + this.state.source + '&time_point=' + this.state.time_point)
+      .then((response) => {
+        this.setState({
+          rca: response.data,
+          loading: false
+        }, () => {
+          const div = document.getElementById('chart-area');
+          div.style.visibility = 'visible';
+          this.generateGraph(this.state.rca[0]);
+          setTimeout(() => {
+            visualization.scaleGraph(this.state.svg, this.state.g, this.zoom);
+          }, 2000);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   prepareSvg() {
@@ -143,9 +120,55 @@ export class RCA extends React.Component {
     });
   }
 
+  nodeMouseOver(nodeGroup) {
+    const multiplier = 1.5;
+    nodeGroup.raise();
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius * multiplier);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize * multiplier}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize * multiplier}px`)
+      .classed('mouse-over', true)
+      .attr('y', this.nodeCircleRadius * 2 * multiplier)
+      .text((d) => d.properties.name);
+
+
+    const labelBBox = nodeGroup.select('.node-label').node().getBBox();
+
+    nodeGroup.append('rect')
+      .attr('class', (d) => `node-label-background ${d.kind}`)
+      .classed('hidden', !this.state.showLabels)
+      .attr('x', labelBBox.x - 4)
+      .attr('y', labelBBox.y)
+      .attr('rx', 3)
+      .attr('ry', 3)
+      .attr('width', labelBBox.width + 8)
+      .attr('height', labelBBox.height)
+      .lower();
+  }
+
+  nodeMouseOut(nodeGroup) {
+    nodeGroup.selectAll('circle').attr('r', this.nodeCircleRadius);
+    nodeGroup.selectAll('.node-icon').attr('font-size', `${this.nodeIconFontSize}px`);
+    nodeGroup.selectAll('.node-label').attr('font-size', `${this.nodeLabelFontSize}px`)
+      .classed('mouse-over', false)
+      .attr('y', this.nodeCircleRadius * 2)
+      .text((d) => truncate(d.properties.name, this.nodeLabelLength));
+    nodeGroup.selectAll('.node-label-background').remove();
+  }
+
+  nodeClick(nodeGroup, nodeData) {
+    visualization.clearClicked();
+    nodeGroup.classed('clicked', true);
+    this.setState({
+      nodeData: nodeData,
+      showDetailCard: true,
+      displayStats: false
+    });
+  }
+
   generateGraph(data) {
-    const graphData = getGraphData(data, this.state.namespace, this.state.kinds, this.state.nodeGroup);
-    
+    const objectKinds = [...new Set(data.nodes.map(nodeGroup => nodeGroup.kind))];
+    const graphData = getGraphData(data, null, objectKinds, this.state.nodeGroup);
+
     const nodes = graphData[0];
     const links = graphData[1];
     const faultNodes = graphData[2];
@@ -208,8 +231,18 @@ export class RCA extends React.Component {
       this.state.simulation.nodes(nodes);
       this.state.simulation.force('link').links(links);
       this.state.simulation.alpha(1).restart();
-      //this.calculateGraphStats(nodes);
     });
+  }
+
+  ticked() {
+    this.state.link
+      .attr('x1', function (d) { return d.source.x; })
+      .attr('y1', function (d) { return d.source.y; })
+      .attr('x2', function (d) { return d.target.x; })
+      .attr('y2', function (d) { return d.target.y; });
+
+    this.state.nodeGroup
+      .attr('transform', d => `translate(${d.x}, ${d.y})`);
   }
 
   render() {
