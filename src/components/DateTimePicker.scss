@@ -95,17 +95,22 @@ input.date-picker:focus {
     @extend .react-select__control--is-focused;
 }
 
-$date-picker-border-color: $accent-color-orange;
+$date-picker-border-color: $background-color-secondary;
 
 .react-datepicker {
     background-color: $background-color-secondary;
     color           : $foreground-color-secondary;
     border: 1px solid $date-picker-border-color;
+    border-radius   : 0 !important;
+}
+
+.react-datepicker__time-container .react-datepicker__time {
+    background-color: $background-color-secondary !important;
+    color           : $foreground-color-secondary !important;
 }
 
 .react-datepicker__time-box {
     border-right: 1px solid $date-picker-border-color;
-    border-bottom-right-radius: 0.3rem;
 }
 
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
@@ -124,6 +129,8 @@ $date-picker-border-color: $accent-color-orange;
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item {
     color:            $foreground-color-primary;
     background-color: $background-color-primary;
+    border-color    : $date-picker-border-color;
+    border-radius   : 0;
 }
 
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
@@ -139,6 +146,7 @@ $date-picker-border-color: $accent-color-orange;
     background-color: $background-color-primary;
     color           : $foreground-color-primary;
     border-color    : $date-picker-border-color;
+    border-radius   : 0;
 }
 
 .react-datepicker__day-name {
@@ -150,7 +158,8 @@ $date-picker-border-color: $accent-color-orange;
 }
 
 .react-datepicker__day:hover {
-    background-color: $accent-color-orange;
+    color           : $background-color-primary;
+    background-color: $foreground-color-secondary;
 }
 
 .react-datepicker__day--disabled {
