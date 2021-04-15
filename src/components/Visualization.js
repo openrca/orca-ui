@@ -4,7 +4,7 @@ export function clearClicked() {
   d3.selectAll('.clicked').classed('clicked', false);
 }
 
-export function scaleGraph(svg, g, zoom) {
+export function scaleGraph(svg, g, zoom, scale_const = 0.95) {
   const width = svg.node().getBoundingClientRect().width;
   const height = svg.node().getBoundingClientRect().height;
 
@@ -15,7 +15,7 @@ export function scaleGraph(svg, g, zoom) {
 
   if(bboxWidth === 0 || bboxHeight === 0) return;
 
-  const scale = 0.95 / Math.max(bboxWidth / width, bboxHeight / height);
+  const scale = scale_const / Math.max(bboxWidth / width, bboxHeight / height);
 
   const transform = d3.zoomIdentity
     .translate(width / 2 - scale * (bboxX + bboxWidth / 2), height / 2 - scale * (bboxY + bboxHeight / 2))
