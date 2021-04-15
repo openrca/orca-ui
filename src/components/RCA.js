@@ -18,7 +18,8 @@ export class RCA extends React.Component {
       loading: true,
       rca: null,
       //Same format as in /v1/graph endpoint
-      nodeGroup: null
+      nodeGroup: null,
+      scale_const: 0.5
     };
 
     this.zoom = d3.zoom();
@@ -60,7 +61,7 @@ export class RCA extends React.Component {
           div.style.visibility = 'visible';
           this.generateGraph(this.state.rca[0]);
           setTimeout(() => {
-            visualization.scaleGraph(this.state.svg, this.state.g, this.zoom);
+            visualization.scaleGraph(this.state.svg, this.state.g, this.zoom, this.state.scale_const);
           }, 2000);
         });
       })
