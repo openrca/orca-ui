@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from 'react-select';
+import List from 'react-list-select';
 
 import './NodeDetailCard.scss';
 
@@ -18,17 +18,14 @@ export class Selector extends React.Component {
     this.setState({
       hidden: this.props.hidden,
       options: this.props.options,
-      selectorOptions: this.props.options ? this.handleOptions(this.props.options) : null,
+      selectorOptions: this.props.options ? this.handleOptions(this.props.options) : [],
       selectedValue: this.props.options ? this.handleOptions(this.props.options)[0] : null
     });
   }
 
   handleOptions(rca_option) {
     return rca_option.map((option, index) => {
-      return {
-        value: index,
-        label: option.score
-      }
+      return option.score.toString()
     });
   }
 
@@ -42,10 +39,10 @@ export class Selector extends React.Component {
         <div className="card-body mt-0 pt-0">
           <h4 className="card-title">Trajectories</h4>
           <div className="card-text node-info-text">
-            <Select
-              options={this.state.selectorOptions}
-              onChange={(e) => this.props.handleChange(e)}
-              value={this.state.selectedValue}
+            <List
+              items={this.state.selectorOptions}
+              selected={[0]}
+              onChange={(selected) => { this.props.handleChange(selected) }}
             />
           </div>
         </div>

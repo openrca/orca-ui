@@ -53,8 +53,8 @@ export class RCA extends React.Component {
     });
   }
 
-  handleTrajectoryChange(e) {
-    this.generateGraph(this.state.rca[e.value]);
+  handleTrajectoryChange(selected) {
+    this.generateGraph(this.state.rca[selected]);
   }
 
   loadData() {
