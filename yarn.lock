@@ -9998,6 +9998,14 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-list-select@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-list-select/-/react-list-select-0.4.1.tgz#2fe4d8f2eb27203c3d6d2ea2ae44b60aee15b7bf"
+  integrity sha512-LFC8yoqVOHLC9khyEgerFWW+XKGhVLdUu3Nh6Rj2krRnTpYGPgXfRBsmhKye6tvyVw8bt+h8/L13tx6N1T/nZQ==
+  dependencies:
+    classnames "^2.2.5"
+    lodash "^4.17.5"
+
 react-loader-spinner@^3.1.14:
   version "3.1.14"
   resolved "https://registry.yarnpkg.com/react-loader-spinner/-/react-loader-spinner-3.1.14.tgz#2a201f07379c492766175609903c0f2ced57c720"
