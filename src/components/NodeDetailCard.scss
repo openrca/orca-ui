@@ -67,3 +67,16 @@
         padding: 0.4rem;
     }
 }
+
+.react-list-select {
+    list-style-type: none;
+    padding-left: 0px;
+
+    li {
+        cursor: pointer;
+    }
+
+    .is-selected {
+        background-color: #ffb671;
+    }
+}

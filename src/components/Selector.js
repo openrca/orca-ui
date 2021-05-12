@@ -1,5 +1,6 @@
 import React from 'react';
 import List from 'react-list-select';
+import { Item } from './Item';
 
 import './NodeDetailCard.scss';
 
@@ -25,7 +26,7 @@ export class Selector extends React.Component {
 
   handleOptions(rca_option) {
     return rca_option.map((option, index) => {
-      return option.score.toString()
+      return <Item option={option} />
     });
   }
 
@@ -37,7 +38,7 @@ export class Selector extends React.Component {
     return (
       <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
         <div className="card-body mt-0 pt-0">
-          <h4 className="card-title">Trajectories</h4>
+          <h4 className="card-title">Fault Trajectories</h4>
           <div className="card-text node-info-text">
             <List
               items={this.state.selectorOptions}
