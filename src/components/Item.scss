@@ -2,10 +2,27 @@
   float: right;
   border: 2px solid white;
   padding: 1px 5px;
+  color: black;
 }
 
 .item {
-  border: 2px solid white;
+  border: 2px solid #636363;
   margin: 10px 0px;
   padding: 10px 15px;
+  background-color: #5c5c5c;
+}
+
+.strong {
+  background-color: #f8cecc;
+  border-color: #b75450;
+}
+
+.medium {
+  background-color: #fff2cc;
+  border-color: #d5b556;
+}
+
+.weak {
+  background-color: #f5f5f5;
+  border-color: #a5a5a5;
 }

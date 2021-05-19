@@ -8,21 +8,22 @@ export class Item extends React.Component {
     this.state = {
       option: this.props.option,
       source: this.props.option.nodes[0],
-      rootCause: this.props.option.nodes[this.props.option.nodes.length - 1],
-
+      rootCause: this.props.option.nodes[this.props.option.nodes.length - 1]
     };
   }
 
-  componentDidMount() {
-    console.log(this.state.option);
+  scoreClass() {
+    if(this.state.option.score <= 0.5) return 'weak';
+    else if(this.state.option.score <= 0.75) return 'medium';
+    else return 'strong';
   }
 
   render() {
     return (
       <div className="item">
-        <div className="score"> {this.state.option.score} </div>
-        <div> Source: {this.state.source.properties.name} </div>
-        <div> Root Cause: {this.state.rootCause.properties.name} </div>
+        <div className={"score " + this.scoreClass()}> <b> {this.state.option.score} </b> </div>
+        <div> <b> Source: </b> {this.state.source.properties.name} </div>
+        <div> <b> Root Cause: </b> {this.state.rootCause.properties.name} </div>
       </div>
     );
   }
