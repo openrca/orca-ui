@@ -8,6 +8,7 @@ import * as visualization from './Visualization';
 import { IconMap } from './IconMap';
 import { truncate } from './Utils';
 import './Graph.scss';
+import { Selector } from './Selector';
 
 export class RCA extends React.Component {
   constructor(props){
@@ -19,12 +20,14 @@ export class RCA extends React.Component {
       rca: null,
       //Same format as in /v1/graph endpoint
       nodeGroup: null,
-      scale_const: 0.5
+      scale_const: 0.5,
+      selector_hidden: false
     };
 
     this.zoom = d3.zoom();
 
     this.generateGraph = this.generateGraph.bind(this);
+    this.handleTrajectoryChange = this.handleTrajectoryChange.bind(this);
     this.ticked = this.ticked.bind(this);
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
@@ -50,18 +53,25 @@ export class RCA extends React.Component {
     });
   }
 
+  handleTrajectoryChange(selected) {
+    this.generateGraph(this.state.rca[selected]);
+  }
+
   loadData() {
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/rca?source=' + this.state.source + '&time_point=' + this.state.time_point)
       .then((response) => {
         this.setState({
-          rca: response.data,
-          loading: false
+          rca: response.data
         }, () => {
-          const div = document.getElementById('chart-area');
-          div.style.visibility = 'visible';
           this.generateGraph(this.state.rca[0]);
           setTimeout(() => {
             visualization.scaleGraph(this.state.svg, this.state.g, this.zoom, this.state.scale_const);
+            const div = document.getElementById('chart-area');
+            div.style.visibility = 'visible';
+            this.setState({
+              loading: false,
+              selector_hidden: false
+            });
           }, 2000);
         });
       })
@@ -253,6 +263,7 @@ export class RCA extends React.Component {
           <Loader type="TailSpin" visible={this.state.loading} color='#343a40' />
         </span>
         <div id="chart-area" />
+        <Selector hidden={this.state.selector_hidden} options={this.state.rca} handleChange={this.handleTrajectoryChange} />
       </div>
     );
   }

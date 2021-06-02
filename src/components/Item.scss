@@ -1,0 +1,29 @@
+.score {
+  float: right;
+  border: 2px solid white;
+  padding: 1px 5px;
+  color: black;
+  font-size: 0.75rem;
+}
+
+.item {
+  margin: 10px 0px;
+  padding: 10px 15px;
+  background-color: #15181a;
+  padding: 20px;
+}
+
+.strong {
+  background-color: #f8cecc;
+  border-color: #b75450;
+}
+
+.medium {
+  background-color: #fff2cc;
+  border-color: #d5b556;
+}
+
+.weak {
+  background-color: #f5f5f5;
+  border-color: #a5a5a5;
+}

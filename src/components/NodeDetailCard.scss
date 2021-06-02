@@ -42,6 +42,11 @@
     font-size: 1rem;
 }
 
+.card .fault {
+    padding: 20px;
+    font-size: 1rem;
+}
+
 .card .node-info-text table{
     margin-left: auto;
     margin-right: auto;
@@ -65,5 +70,21 @@
     th, td {
         text-align: center !important;
         padding: 0.4rem;
+    }
+}
+
+.react-list-select {
+    list-style-type: none;
+    padding-left: 0px;
+
+    li {
+        cursor: pointer;
+    }
+
+    .is-selected {
+        .item {
+            background-color: #ffb671;
+            color: black;
+        }
     }
 }
