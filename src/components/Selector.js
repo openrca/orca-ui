@@ -38,7 +38,7 @@ export class Selector extends React.Component {
     return (
       <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
         <div className="card-body mt-0 pt-0">
-          <h4 className="card-title">Fault Trajectories</h4>
+          <h4 className="card-title fault">Fault Trajectories</h4>
           <div className="card-text node-info-text">
             <List
               items={this.state.selectorOptions}
