@@ -231,6 +231,7 @@ export class RCA extends React.Component {
     const linkText = linkGroup.append("text")
       .attr("class", "link-label")
       .attr('font-size', `${this.linkLabelFontSize}px`)
+      .attr('text-anchor', 'middle')
       .text(d => d.properties.strength);
 
     nodeGroup
