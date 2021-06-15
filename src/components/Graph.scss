@@ -60,7 +60,10 @@ text.node-label {
     cursor: pointer;
 }
 
-
+text.link-label {
+    fill: $foreground-color-secondary;
+    text-shadow: 2px 2px $background-color-primary;
+}
 
 g.node-group.clicked {
     filter: brightness(130%);

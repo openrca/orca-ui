@@ -33,6 +33,7 @@ export class RCA extends React.Component {
     this.nodeIconFontSize = 16;
     this.nodeLabelFontSize = 16;
     this.nodeLabelLength = 18;
+    this.linkLabelFontSize = 10;
   }
 
   componentDidMount() {
@@ -106,6 +107,9 @@ export class RCA extends React.Component {
     const link = g.append('g')
       .selectAll('line');
 
+    const linkGroup = g.append('g')
+      .selectAll('.link-group')
+
     const nodeGroup = g.append('g')
       .selectAll('.node-group');
 
@@ -120,6 +124,7 @@ export class RCA extends React.Component {
 
     this.setState({
       link: link,
+      linkGroup: linkGroup,
       nodeGroup: nodeGroup,
       nodeCircle: nodeCircle,
       nodeIcon: nodeIcon,
@@ -222,10 +227,22 @@ export class RCA extends React.Component {
       .attr('y', this.nodeCircleRadius * 2)
       .text((d) => truncate(d.properties.name, this.nodeLabelLength));
 
-    const link = this.state.link
+    const linkGroup = this.state.linkGroup
+      .data(links, d => [d.source, d.target])
+      .join(enter => enter.append('g')
+        .attr('class', 'link-group')
+        .attr('id', d => `link-group-${d.id}`))
+
+    const link = linkGroup.append("line")
       .data(links, d => [d.source, d.target])
       .join('line')
       .attr('class', d => {return d.fault ? 'link fault' : 'link';});
+
+    const linkText = linkGroup.append("text")
+      .attr("class", "link-label")
+      .attr('font-size', `${this.linkLabelFontSize}px`)
+      .attr('text-anchor', 'middle')
+      .text(d => d.properties.strength);
 
     nodeGroup
       .on('mouseover', d => this.nodeMouseOver(d3.select(`#node-group-${d.id}`), d))
@@ -237,7 +254,9 @@ export class RCA extends React.Component {
       nodeIcon: nodeIcon,
       nodeGroup: nodeGroup,
       showLabels: nodeLabel._groups[0].length > 0 ? !nodeLabel.classed('hidden') : null,
-      link: link
+      link: link,
+      linkText: linkText,
+      linkGroup: linkGroup
     }, () => {
       this.state.simulation.nodes(nodes);
       this.state.simulation.force('link').links(links);
@@ -251,6 +270,12 @@ export class RCA extends React.Component {
       .attr('y1', function (d) { return d.source.y; })
       .attr('x2', function (d) { return d.target.x; })
       .attr('y2', function (d) { return d.target.y; });
+
+    if(this.state.linkText) {
+      this.state.linkText
+        .attr('x', d => (d.source.x + d.target.x)/2)
+        .attr('y', d => (d.source.y + d.target.y)/2)
+    }
 
     this.state.nodeGroup
       .attr('transform', d => `translate(${d.x}, ${d.y})`);
