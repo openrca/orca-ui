@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
-import * as d3 from 'd3';
 
 import './NodeDetailCard.scss';
 
@@ -16,7 +15,8 @@ export class NodeDetailCard extends React.Component {
       },
       hidden: true,
       displayProperties: [],
-      stat: {}
+      stat: {},
+      floatRight: false
     };
   }
 
@@ -25,7 +25,8 @@ export class NodeDetailCard extends React.Component {
       nodeData: this.props.nodeData,
       displayProperties: this.props.nodeData.properties,
       hidden: this.props.hidden,
-      stat: this.props.stat
+      stat: this.props.stat,
+      floatRight: this.props.floatRight
     });
   }
 
@@ -39,7 +40,7 @@ export class NodeDetailCard extends React.Component {
 
   render() {
     return (
-      <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0`}>
+      <div className={`card node-info-card ${this.state.hidden ? 'hidden' : ''} pt-0 ${this.state.floatRight ? "right" : ''}`}>
         <button type="button" className="close mt-1 mr-2 mb-0" aria-label="Close" onClick={this.props.hideDetailCard}>
           <span aria-hidden="true">&times;</span>
         </button>
