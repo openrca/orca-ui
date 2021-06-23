@@ -9,6 +9,7 @@ import { IconMap } from './IconMap';
 import { truncate } from './Utils';
 import './Graph.scss';
 import { Selector } from './Selector';
+import { NodeDetailCard } from './NodeDetailCard';
 
 export class RCA extends React.Component {
   constructor(props){
@@ -21,13 +22,21 @@ export class RCA extends React.Component {
       //Same format as in /v1/graph endpoint
       nodeGroup: null,
       scale_const: 0.5,
-      selector_hidden: false
+      selector_hidden: false,
+      showDetailCard: false,
+      nodeData: {
+        kind: '',
+        properties: {
+          name: ''
+        }
+      },
     };
 
     this.zoom = d3.zoom();
 
     this.generateGraph = this.generateGraph.bind(this);
     this.handleTrajectoryChange = this.handleTrajectoryChange.bind(this);
+    this.hideDetailCard = this.hideDetailCard.bind(this);
     this.ticked = this.ticked.bind(this);
     this.nodeCircleRadius = 16;
     this.nodeIconFontSize = 16;
@@ -281,6 +290,10 @@ export class RCA extends React.Component {
       .attr('transform', d => `translate(${d.x}, ${d.y})`);
   }
 
+  hideDetailCard() {
+    this.setState({ showDetailCard: false });
+  }
+
   render() {
     return(
       <div>
@@ -289,6 +302,7 @@ export class RCA extends React.Component {
         </span>
         <div id="chart-area" />
         <Selector hidden={this.state.selector_hidden} options={this.state.rca} handleChange={this.handleTrajectoryChange} />
+        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} hideDetailCard={this.hideDetailCard} floatRight={true}/>
       </div>
     );
   }
