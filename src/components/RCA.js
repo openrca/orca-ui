@@ -103,6 +103,17 @@ export class RCA extends React.Component {
       }))
       .append('g');
 
+    svg.append("svg:defs").append("svg:marker")
+      .attr("id", "arrow")
+      .attr("viewBox", "0 -5 10 10")
+      .attr('refX', 22)
+      .attr('refY', 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+
     const simulation = d3.forceSimulation()
       .force('link', d3.forceLink().id(d => d.id).distance(100).strength(1))
       .force('charge', d3.forceManyBody().strength(-300))
@@ -245,7 +256,8 @@ export class RCA extends React.Component {
     const link = linkGroup.append("line")
       .data(links, d => [d.source, d.target])
       .join('line')
-      .attr('class', d => {return d.fault ? 'link fault' : 'link';});
+      .attr('class', d => {return d.fault ? 'link fault' : 'link';})
+      .attr("marker-end", (d) => "url(#arrow)");
 
     const linkText = linkGroup.append("text")
       .attr("class", "link-label")
