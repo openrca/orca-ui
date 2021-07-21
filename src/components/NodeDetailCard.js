@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
+import { Button } from 'react-bootstrap';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Link } from 'react-router-dom';
 
+import 'react-tabs/style/react-tabs.css';
 import './NodeDetailCard.scss';
 
 export class NodeDetailCard extends React.Component {
@@ -16,7 +20,9 @@ export class NodeDetailCard extends React.Component {
       hidden: true,
       displayProperties: [],
       stat: {},
-      floatRight: false
+      floatRight: false,
+      timestamp: null,
+      rca: false
     };
   }
 
@@ -26,12 +32,15 @@ export class NodeDetailCard extends React.Component {
       displayProperties: this.props.nodeData.properties,
       hidden: this.props.hidden,
       stat: this.props.stat,
-      floatRight: this.props.floatRight
+      floatRight: this.props.floatRight,
+      timestamp: this.props.timestamp,
+      rca: this.props.rca
     });
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.state.hidden !== nextProps.hidden || this.state.nodeData !== nextProps.nodeData || this.state.stat !== nextProps.stat;
+    return this.state.hidden !== nextProps.hidden || this.state.nodeData !== nextProps.nodeData || this.state.stat !== nextProps.stat 
+      || this.state.timestamp != nextProps.timestamp;
   }
 
   show() {
@@ -47,9 +56,31 @@ export class NodeDetailCard extends React.Component {
         <div className="card-body mt-0 pt-0">
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
-          <div className="card-text node-info-text">
-            <ReactJson src={this.state.displayProperties} name={null} collapsed={2} displayDataTypes={false}/>
-          </div>
+          { this.state.nodeData.kind === 'alert' && this.state.rca === false ?
+            <Tabs>
+              <TabList>
+                <Tab>Info</Tab>
+                <Tab>RCA</Tab>
+              </TabList>
+              <TabPanel>
+                <div className="card-text node-info-text">
+                  <ReactJson src={this.state.displayProperties} name={null} collapsed={2} displayDataTypes={false}/>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <p> Perform Root Cause Analysis </p>
+                <Link to={`/rca?source=${this.state.nodeData.id}&time_point=${this.state.timestamp}`} >
+                  <Button className="rca" size="sm" variant="outline-warning">
+                    Analyze
+                  </Button>
+                </Link>
+              </TabPanel>
+            </Tabs>
+            :
+            <div className="card-text node-info-text">
+              <ReactJson src={this.state.displayProperties} name={null} collapsed={2} displayDataTypes={false}/>
+            </div> 
+          }
         </div>
       </div>
     );

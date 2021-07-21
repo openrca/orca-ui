@@ -37,7 +37,8 @@ export class Graph extends React.Component {
       svg: null,
       g: null,
       loading: true,
-      stat: null
+      stat: null,
+      timestamp: new Date().getTime()/1000
     };
 
     this.zoom = d3.zoom();
@@ -61,11 +62,14 @@ export class Graph extends React.Component {
     const div = document.getElementById('chart-area');
     div.style.visibility = 'hidden';
     this.prepareSvg();
-    this.loadData();
+    this.loadData(this.state.timestamp, true);
   }
 
   onDateTimeSelect(timestamp) {
     this.loadData(timestamp);
+    this.setState({
+      timestamp: timestamp
+    });
   }
 
   toggleNodeLabels(e) {
@@ -96,7 +100,7 @@ export class Graph extends React.Component {
     this.setState({ showDetailCard: false });
   }
 
-  loadData(timestamp = null) {
+  loadData(timestamp, spread = false) {
     d3.select('.refresh-icon').classed('rotating', true);
     const param = timestamp ? `?time_point=${timestamp}` : '';
     axios.get(process.env.REACT_APP_BACKEND_HOST + '/v1/graph' + param)
@@ -120,7 +124,7 @@ export class Graph extends React.Component {
           objectKindOptions: objectKindOptions,
           data: response.data
         }, () => {
-          if(!timestamp) setTimeout(this.graphLoad, 2000);
+          if(spread) setTimeout(this.graphLoad, 2000);
           this.generateGraph(response.data);
         });
         d3.select('.refresh-icon').classed('rotating', false);
@@ -360,7 +364,8 @@ export class Graph extends React.Component {
           Stats
         </Button>
         <div id="chart-area" />
-        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} stat={this.state.stat} hideDetailCard={this.hideDetailCard} />
+        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} stat={this.state.stat} 
+          hideDetailCard={this.hideDetailCard} timestamp={this.state.timestamp} rca={false}/>
         <DateTimePicker onSelect={this.onDateTimeSelect} namespaceOptions={this.state.namespaceOptions}
           objectKindOptions={this.state.objectKindOptions} handleNamespaceChange={this.handleNamespaceChange}
           handleKindChange={this.handleKindChange} showLabels={this.state.showLabels} toggleNodeLabels={this.toggleNodeLabels}
