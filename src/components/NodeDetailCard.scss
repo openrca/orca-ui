@@ -100,4 +100,16 @@
 
 .card .card-body {
     font-size: 1rem;
+
+    .react-tabs {
+        padding-top: 15px;
+    
+        i {
+            margin-right: 3px;
+        }
+    
+        .analysis {
+            text-align: center;
+        }
+    }
 }

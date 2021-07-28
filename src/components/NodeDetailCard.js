@@ -40,7 +40,7 @@ export class NodeDetailCard extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return this.state.hidden !== nextProps.hidden || this.state.nodeData !== nextProps.nodeData || this.state.stat !== nextProps.stat 
-      || this.state.timestamp != nextProps.timestamp;
+      || this.state.timestamp !== nextProps.timestamp;
   }
 
   show() {
@@ -56,24 +56,28 @@ export class NodeDetailCard extends React.Component {
         <div className="card-body mt-0 pt-0">
           <h4 className="card-title">{this.state.nodeData.properties.name}</h4>
           <h5 className="card-subtitle">{this.state.nodeData.kind.replace('_', ' ')}</h5>
-          { this.state.nodeData.kind === 'alert' && this.state.rca === false ?
+          { this.state.rca === false ?
             <Tabs>
               <TabList>
-                <Tab>Info</Tab>
-                <Tab>RCA</Tab>
+                <Tab><i class="fa fa-info-circle" aria-hidden="true"></i>Details</Tab>
+                <Tab><i class="fa fa-medkit" aria-hidden="true"></i>Analysis</Tab>
               </TabList>
               <TabPanel>
                 <div className="card-text node-info-text">
                   <ReactJson src={this.state.displayProperties} name={null} collapsed={2} displayDataTypes={false}/>
                 </div>
               </TabPanel>
-              <TabPanel>
+              <TabPanel className="analysis">
+                { this.state.nodeData.kind === 'alert' ?
+                <span>
                 <p> Perform Root Cause Analysis </p>
                 <Link to={`/rca?source=${this.state.nodeData.id}&time_point=${this.state.timestamp}`} >
                   <Button className="rca" size="sm" variant="outline-warning">
                     Analyze
                   </Button>
                 </Link>
+                </span>
+                : <p>Root Cause Analysis not available for {this.state.nodeData.kind} objects</p> }
               </TabPanel>
             </Tabs>
             :
