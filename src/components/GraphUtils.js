@@ -114,18 +114,23 @@ export function getGraphData(data, namespace, kinds, nodeGroup) {
   var links = data.links;
   var nodes = d3.values(data.nodes);
   
-  nodes = filterByNamespace(nodes, namespace);
-  links = getLinksBetweenNodes(nodes, links);
+  if (JSON.stringify(kinds) !== JSON.stringify(['alert'])) {
+    nodes = filterByNamespace(nodes, namespace);
+    links = getLinksBetweenNodes(nodes, links);
 
-  const filteredNodesComponents = filterNodes(nodes, links, namespace);
-  nodes = filteredNodesComponents[0];
-  links = filteredNodesComponents[1];
+    const filteredNodesComponents = filterNodes(nodes, links, namespace);
+    nodes = filteredNodesComponents[0];
+    links = filteredNodesComponents[1];
 
-  nodes = filterByKinds(nodes, kinds);
-  links = getLinksBetweenNodes(nodes, links);
+    nodes = filterByKinds(nodes, kinds);
+    links = getLinksBetweenNodes(nodes, links);
 
-  nodes = filterByAlerts(nodes, links);
-  links = getLinksBetweenNodes(nodes, links);
+    nodes = filterByAlerts(nodes, links);
+    links = getLinksBetweenNodes(nodes, links);
+  } else {
+    nodes = filterByKinds(nodes, kinds);
+    links = getLinksBetweenNodes(nodes, links);
+  }
 
   const old = new Map(nodeGroup.data().map(d => [d.id, d]));
   nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
