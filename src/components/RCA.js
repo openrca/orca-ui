@@ -314,7 +314,8 @@ export class RCA extends React.Component {
         </span>
         <div id="chart-area" />
         <Selector hidden={this.state.selector_hidden} options={this.state.rca} handleChange={this.handleTrajectoryChange} />
-        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} hideDetailCard={this.hideDetailCard} floatRight={true}/>
+        <NodeDetailCard hidden={!this.state.showDetailCard} nodeData={this.state.nodeData} 
+          hideDetailCard={this.hideDetailCard} floatRight={true} rca={true}/>
       </div>
     );
   }
