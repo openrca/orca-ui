@@ -38,7 +38,7 @@ export class Graph extends React.Component {
       g: null,
       loading: true,
       stat: null,
-      timestamp: new Date().getTime()/1000
+      timestamp: parseInt(new Date().getTime()/1000)
     };
 
     this.zoom = d3.zoom();
