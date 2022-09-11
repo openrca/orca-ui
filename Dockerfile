@@ -6,7 +6,7 @@ ENV REACT_APP_BACKEND_HOST /api
 COPY . ./
 RUN yarn build
 
-FROM nginx:1.19.0-alpine
+FROM nginx:1.22-alpine
 
 ENV LISTEN_PORT=8080
 
